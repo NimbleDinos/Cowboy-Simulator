@@ -287,3 +287,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+DiscordBot/token.txt
