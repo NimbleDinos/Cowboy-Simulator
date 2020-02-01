@@ -59,7 +59,7 @@ public class PlayerGoToPlaceScript : MonoBehaviour
         timer = 0;
         tim = Random.Range(5, 11);
 
-        Target = TargObj.position + new Vector3(Random.Range(0, 3) - 1, 0, Random.Range(0, 3) - 1);
+        Target = TargObj.position + new Vector3(Random.Range(0, 3) - 1, Random.Range(0, 3) - 1, 0);
     }
 
     private void Update()
@@ -72,19 +72,19 @@ public class PlayerGoToPlaceScript : MonoBehaviour
 
         Vector3 Direction = Vector3.MoveTowards(transform.position, Target, (2 * Time.deltaTime));
 
-        if (Direction.x > transform.position.x)
+        if (Direction.x > transform.position.x && transform.GetComponent<Animator>().GetBool("isWalk"))
         {
             this.transform.localScale = new Vector3(-.1f, .1f, .1f);
             this.transform.GetComponentInChildren<TextMesh>().transform.localScale = new Vector3(-.3f, .3f, .3f);
         }
-        else
+        else if (transform.GetComponent<Animator>().GetBool("isWalk"))
         {
             this.transform.localScale = new Vector3(.1f, .1f, .1f);
             this.transform.GetComponentInChildren<TextMesh>().transform.localScale = new Vector3(.3f, .3f, .3f);
         }
         transform.position = Direction;
 
-        if(Vector3.Distance(transform.position, Target) > 1)
+        if(Vector3.Distance(transform.position, Target) > .1)
         {
             this.GetComponent<Animator>().SetBool("isWalk", true);
         }
