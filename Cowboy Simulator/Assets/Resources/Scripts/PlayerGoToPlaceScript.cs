@@ -5,8 +5,12 @@ using UnityEditor;
 
 public class PlayerGoToPlaceScript : MonoBehaviour
 {
-    public GameObject objHull, objMine, objShefuel, objGrimstone, objhorseRide, objHorseCatch;
-    Transform Target; 
+    public GameObject objHull, objMine, objSheffield, objLincoln, objhorseRide, objHorseCatch;
+    Transform TargObj;
+    Vector3 Target;
+    public string name;
+
+    public float tim = 10, timer = 0;
 
     GameObject[] Places;
 
@@ -15,6 +19,8 @@ public class PlayerGoToPlaceScript : MonoBehaviour
     {
         Places = GameObject.FindGameObjectsWithTag("Place");
 
+        this.transform.GetComponentInChildren<TextMesh>().text = name;
+
         for (int i = 0; i < Places.Length; i++)
         {
             switch(Places[i].name)
@@ -22,11 +28,11 @@ public class PlayerGoToPlaceScript : MonoBehaviour
                 case "Hull":
                     objHull = Places[i];
                     break;
-                case "Shefuel":
-                    objShefuel = Places[i];
+                case "Sheffield":
+                    objSheffield = Places[i];
                     break;
-                case "Grimstone":
-                    objGrimstone = Places[i];
+                case "Lincoln":
+                    objLincoln = Places[i];
                     break;
                 case "HorseRide":
                     objhorseRide= Places[i];
@@ -42,10 +48,40 @@ public class PlayerGoToPlaceScript : MonoBehaviour
 
     }
 
+    void RandPos()
+    {
+        timer = 0;
+        tim = Random.Range(5, 11);
+
+        Target = TargObj.position + new Vector3(Random.Range(0, 2) - 1, Random.Range(0, 2) - 1, Random.Range(0, 2) - 1);
+    }
+
     private void Update()
     {
+        timer += Time.deltaTime;
 
-        transform.position = Vector3.MoveTowards(transform.position, Target.position, (2 * Time.deltaTime));
+        if (timer > tim)
+            RandPos();
+            
+
+        Vector3 Direction = Vector3.MoveTowards(transform.position, Target, (2 * Time.deltaTime));
+
+        if (Direction.x > transform.position.x)
+        {
+            this.transform.localScale = new Vector3(-.1f, .1f, .1f);
+        }
+        else
+            this.transform.localScale = new Vector3(.1f, .1f, .1f);
+
+        transform.position = Direction;
+
+        if(Vector3.Distance(transform.position, Target) > 1)
+        {
+            this.GetComponent<Animator>().SetBool("isWalk", true);
+        }
+        else
+            this.GetComponent<Animator>().SetBool("isWalk", false);
+
 
     }
 
@@ -53,33 +89,38 @@ public class PlayerGoToPlaceScript : MonoBehaviour
 
     public void Hull()
     {
-        Target = objHull.transform;
+        TargObj = objHull.transform;
+        Target = TargObj.position;
     }
 
-    public void SheFuel()
+    public void Sheffield()
     {
-        Target = objShefuel.transform;
+        TargObj= objSheffield.transform;
+        Target = TargObj.position;
     }
 
-    public void GrimStone()
+    public void Lincoln()
     {
-        Target = objGrimstone.transform;
+        TargObj= objLincoln.transform;
+        Target = TargObj.position;
     }
-
     public void HorseRide()
     {
-        Target = objhorseRide.transform;
+        TargObj= objhorseRide.transform;
+        Target = TargObj.position;
     }
 
     public void HorseCatch()
     {
-        Target = objHorseCatch.transform;
-    }
-    public void Mine()
-    {
-        Target = objMine.transform;
+        TargObj= objHorseCatch.transform;
+        Target = TargObj.position;
     }
 
+    public void Mine()
+    {
+        TargObj= objMine.transform;
+        Target = TargObj.position;
+    }
 
 }
 
@@ -98,14 +139,14 @@ public class CityGenButts : Editor
                 script.Setup();
             }
 
-            if (GUILayout.Button("GoTo Shefuel"))
+            if (GUILayout.Button("GoTo Sheffield"))
             {
-                script.SheFuel();
+                script.Sheffield();
             }
 
-            if (GUILayout.Button("GoTo GrimStone"))
+            if (GUILayout.Button("GoTo Lincoln"))
             {
-                script.GrimStone();
+                script.Lincoln();
             }
 
             if (GUILayout.Button("GoTo Hull"))
