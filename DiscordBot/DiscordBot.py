@@ -95,14 +95,14 @@ async def goto(ctx, location):
 	player_status = database.select_active_players(userID)
 	print(player_status)
 	if player_status[0] == (1,):
-		if location in locationList:
+		if location.lower() in locationList:
 			# TODO: update db with new loc
 			#TODO: do thing to get time here
 			time = 30
-			api_message = APIMethods.move_to_request(userID, location, time)
+			api_message = APIMethods.move_to_request(userID, location.lower(), time)
 			await ctx.send(api_message)
 		else:
-			await ctx.send("Sorry but {0} isn't a valid place".format(location))
+			await ctx.send("Sorry but {0} isn't a valid place".format(location.lower()))
 	else:
 		await ctx.send("You aren't in the game yet, {0}".format(userName))
 
