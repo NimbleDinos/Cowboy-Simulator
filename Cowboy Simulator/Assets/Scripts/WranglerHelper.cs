@@ -21,6 +21,14 @@ public class WranglerHelper : MonoBehaviour
 
         var moveList = await GetMovement();
 
+        if (moveList.Count() > 0)
+        {
+            foreach (var item in moveList)
+            {
+                GetComponent<Bob>().MovePlayer(item);
+            }
+        }
+
     }
 
     async Task<Join> GetJoin()
@@ -49,7 +57,7 @@ public class WranglerHelper : MonoBehaviour
 
         if (moveList.Any())
         {
-            Debug.Log(moveList);
+            Debug.Log(moveList[0].place);
         }
 
         return moveList;

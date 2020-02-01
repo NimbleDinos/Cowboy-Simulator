@@ -6,6 +6,40 @@ public class Bob : MonoBehaviour
 {
     public GameObject playerPrefab;
     public List< GameObject > Players;
+    public void MovePlayer(Movement data)
+    {
+        foreach (var item in Players)
+        {
+            if(item.name == data.userId.ToString())
+            {
+                switch(data.place)
+                {
+                    case "hull":
+                        item.GetComponent<PlayerGoToPlaceScript>().Hull();
+                        break;
+                    case "sheffield":
+                        item.GetComponent<PlayerGoToPlaceScript>().Sheffield();
+                        break;
+                    case "lincoln":
+                        item.GetComponent<PlayerGoToPlaceScript>().Lincoln();
+                        break;
+                    case "corral":
+                        item.GetComponent<PlayerGoToPlaceScript>().HorseRide();
+                        break;
+                    case "gold-mine":
+                        item.GetComponent<PlayerGoToPlaceScript>().Mine();
+                        break;
+                    case "plains":
+                        item.GetComponent<PlayerGoToPlaceScript>().HorseCatch();
+                        break;
+                    case "shooting-range":
+                        item.GetComponent<PlayerGoToPlaceScript>().Shot();
+                        break;
+                }
+            }
+        }
+    }
+
     public void CreatePlayer(Join data)
     {
         bool doExist = false;
