@@ -20,6 +20,7 @@ public class PlayerGoToPlaceScript : MonoBehaviour
         Places = GameObject.FindGameObjectsWithTag("Place");
 
         this.transform.GetComponentInChildren<TextMesh>().text = name;
+        this.transform.GetComponentInChildren<MeshRenderer>().sortingLayerName = "Top";
 
         for (int i = 0; i < Places.Length; i++)
         {
@@ -49,6 +50,8 @@ public class PlayerGoToPlaceScript : MonoBehaviour
             }
         }
 
+        Hull();
+
     }
 
     void RandPos()
@@ -72,10 +75,13 @@ public class PlayerGoToPlaceScript : MonoBehaviour
         if (Direction.x > transform.position.x)
         {
             this.transform.localScale = new Vector3(-.1f, .1f, .1f);
+            this.transform.GetComponentInChildren<TextMesh>().transform.localScale = new Vector3(-.3f, .3f, .3f);
         }
         else
+        {
             this.transform.localScale = new Vector3(.1f, .1f, .1f);
-
+            this.transform.GetComponentInChildren<TextMesh>().transform.localScale = new Vector3(.3f, .3f, .3f);
+        }
         transform.position = Direction;
 
         if(Vector3.Distance(transform.position, Target) > 1)
