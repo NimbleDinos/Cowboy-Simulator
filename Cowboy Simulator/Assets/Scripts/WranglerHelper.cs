@@ -11,6 +11,9 @@ public class WranglerHelper : MonoBehaviour
     async void Update()
     {
         var join = await GetJoin();
+
+        GetComponent<Bob>().CreatePlayer(join);
+
     }
 
     async Task<Join> GetJoin()
