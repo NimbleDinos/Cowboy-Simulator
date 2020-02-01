@@ -34,7 +34,11 @@ async def on_ready():
 @client.command()
 async def test(ctx):
 	await ctx.send("Hello, this is a test!")
-
+	userID = ctx.message.author.id
+	userName = ctx.message.author.name
+	
+	me = player.playerClass()
+	me.panAction()
 
 # join game command
 @client.command()
