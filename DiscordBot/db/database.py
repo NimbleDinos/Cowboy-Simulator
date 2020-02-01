@@ -33,6 +33,7 @@ class Database:
     def add_player(self, player):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_insert_player, (player,))
+        self.conn.commit()
         return cur.lastrowid
 
     def select_player(self, player_id):

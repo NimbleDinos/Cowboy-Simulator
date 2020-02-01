@@ -290,3 +290,5 @@ dmypy.json
 .pyre/
 
 DiscordBot/token.txt
+
+.DS_Store
