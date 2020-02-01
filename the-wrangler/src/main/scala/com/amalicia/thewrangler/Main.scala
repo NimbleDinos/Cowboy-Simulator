@@ -31,7 +31,7 @@ object Main extends App {
   }
 
   def getJoin: Endpoint[IO, Json] = get("getJoin") {
-    if (joinQueue.isEmpty) Ok((-1).asJson)
+    if (joinQueue.isEmpty) Ok(JoinGame(-1, "").asJson)
     else Ok(joinQueue.dequeue().asJson)
   }
 
