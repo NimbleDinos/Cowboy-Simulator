@@ -42,20 +42,41 @@ async def join(ctx):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
 
-	result = database.select_player(userID)
+	player_exist = database.select_player_exists(userID)
+	# print(player_exist)
+	print("in command")
 
-	if len(result) == 1:
-		# user is already in database
-		await ctx.send("You are already in the game " + userName + "!")
-	else:
-		# add user to game database
-		player_data = userID
+	if (len(player_exist)) == 0:
+		player_data = (userID, 1)
 		database.add_player(player_data)
 		newPlayer = player.playerClass()
 		newPlayer.id = userID
 		playerList.append(newPlayer)
 		await ctx.send("You have joined the game " + userName + "!")
+	else:
+		player_status = database.select_player_status(userID)
+		print(player_status[0])
+		if player_status[0] == (0,):
+			database.update_player_status(userID, 1)
+			await ctx.send("You have joined the game " + userName + "!")
+		else:
+			await ctx.send("You are already in the game " + userName + "!")
 
+@client.command()
+async def leave(ctx):
+	user_id = ctx.message.author.id
+	user_name = ctx.message.author.name
+
+	player_exist = database.select_player_exists(user_id)
+	if (len(player_exist)) == 0:
+		await ctx.send("You are not currently in the game " + user_name +"!")
+	else:
+		player_status = database.select_player_status(user_id)
+		if player_status[0] == (0,):
+			await ctx.send("You are not currently in the game " + user_name + "!")
+		else:
+			database.update_player_status(user_id, 0)
+			await ctx.send("See you soon " + user_name +"!")
 
 # go to command
 @client.command()

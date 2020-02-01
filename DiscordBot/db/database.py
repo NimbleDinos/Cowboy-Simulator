@@ -32,12 +32,23 @@ class Database:
 
     def add_player(self, player):
         cur = self.conn.cursor()
-        cur.execute(db.sqlCommands.sql_insert_player, (player,))
+        cur.execute(db.sqlCommands.sql_insert_player, player)
         self.conn.commit()
         return cur.lastrowid
 
-    def select_player(self, player_id):
+    def select_player_exists(self, player_id):
         cur = self.conn.cursor()
-        cur.execute(db.sqlCommands.sql_select_player, (player_id,))
+        cur.execute(db.sqlCommands.sql_select_player_exists, (player_id,))
         rows = cur.fetchall()
         return rows
+
+    def select_player_status(self, player_id):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_player_status, (player_id,))
+        rows = cur.fetchall()
+        return rows
+
+    def update_player_status(self, player_id, status):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_player_status, (status, player_id))
+        self.conn.commit()
