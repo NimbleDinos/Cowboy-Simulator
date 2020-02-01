@@ -17,6 +17,8 @@ async def on_ready():
 	print("Bot is online")
 	print("Name: Cowboy Simulator")
 	print("TD: {}".format(client.user.id))
+	thing = client
+	print(thing)
 
 @client.command()
 async def test(ctx):
@@ -29,9 +31,8 @@ async def on_message(message):
 
 	# THIS THING FUCKING DONT WORK
 	if "a" in message.content.lower():
-		thing = message.server.members
-		for x in thing:
-			print(x)
+		thing = discord.Guild.members
+		print(thing)
 	
 	await client.process_commands(message)
 
