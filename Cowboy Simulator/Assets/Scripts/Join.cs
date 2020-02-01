@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class Join
 {
-    public int playerId { get; set; }
+    public long playerId { get; set; }
     public string playerName { get; set; }
 }

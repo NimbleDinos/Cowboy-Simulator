@@ -8,26 +8,41 @@ public class Bob : MonoBehaviour
     public List< GameObject > Players;
     public void CreatePlayer(Join data)
     {
-        foreach(GameObject check in Players)
+        bool doExist = false;
+        foreach (GameObject check in Players)
         {
             if (check.name == data.playerId.ToString())
             {
-                DestroyImmediate(check);
+                doExist = true;
                 break;
             }
         }
 
-        GameObject Player = Instantiate(playerPrefab);
+        if (!doExist)
+        {
+            GameObject Player = Instantiate(playerPrefab);
 
-        Player.name = data.playerId.ToString();
+            Player.name = data.playerId.ToString();
 
-        Player.GetComponent<PlayerGoToPlaceScript>().name = data.playerName;
+            Player.GetComponent<PlayerGoToPlaceScript>().name = data.playerName;
 
-        Player.GetComponent<PlayerGoToPlaceScript>().Setup();
+            Player.GetComponent<PlayerGoToPlaceScript>().Setup();
 
-        Players.Add(Player);
-
+            Players.Add(Player);
+        }
+        else
+        {
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].name == data.playerId.ToString())
+                {
+                    GameObject temp = Players[i];
+                    Players.Remove(temp);
+                    DestroyImmediate(temp);
+                    break;
+                }
+            }
+        }
     }
-
 
 }

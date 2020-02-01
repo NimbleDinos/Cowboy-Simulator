@@ -12,7 +12,11 @@ public class WranglerHelper : MonoBehaviour
     {
         var join = await GetJoin();
 
-        GetComponent<Bob>().CreatePlayer(join);
+        if (join.playerId != -1)
+        {
+            Debug.Log(join.playerId);
+            GetComponent<Bob>().CreatePlayer(join);
+        }
 
     }
 
@@ -25,7 +29,7 @@ public class WranglerHelper : MonoBehaviour
         }
         var json = response.text;
         var join = JsonConvert.DeserializeObject<Join>(json);
-        Debug.Log(join.playerId);
+        //Debug.Log(join.playerId);
 
         return join;
     }
