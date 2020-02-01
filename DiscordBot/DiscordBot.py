@@ -56,13 +56,15 @@ async def join(ctx):
 		newPlayer = player.playerClass()
 		newPlayer.id = userID
 		playerList.append(newPlayer)
-		await ctx.send("You have joined the game " + userName + "!")
+		api_message = APIMethods.join_game_request(userID, userName)
+		await ctx.send(api_message)
 	else:
 		player_status = database.select_player_status(userID)
 		print(player_status[0])
 		if player_status[0] == (0,):
 			database.update_player_status(userID, 1)
-			await ctx.send("You have joined the game " + userName + "!")
+			api_message = APIMethods.join_game_request(userID, userName)
+			await ctx.send(api_message)
 		else:
 			await ctx.send("You are already in the game " + userName + "!")
 
@@ -80,6 +82,7 @@ async def leave(ctx):
 			await ctx.send("You are not currently in the game " + user_name + "!")
 		else:
 			database.update_player_status(user_id, 0)
+			APIMethods.join_game_request(user_id, user_name)
 			await ctx.send("See you soon " + user_name +"!")
 
 # go to command
