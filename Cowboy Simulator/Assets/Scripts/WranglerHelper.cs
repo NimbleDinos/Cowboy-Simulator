@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using Newtonsoft.Json;
@@ -18,6 +19,8 @@ public class WranglerHelper : MonoBehaviour
             GetComponent<Bob>().CreatePlayer(join);
         }
 
+        var moveList = await GetMovement();
+
     }
 
     async Task<Join> GetJoin()
@@ -32,5 +35,23 @@ public class WranglerHelper : MonoBehaviour
         //Debug.Log(join.playerId);
 
         return join;
+    }
+
+    async Task<Movement[]> GetMovement()
+    {
+        var response = await new WWW("http://localhost:8081/getMovement");
+        if (!string.IsNullOrEmpty(response.error))
+        {
+            throw new Exception();
+        }
+        var json = response.text;
+        var moveList = JsonConvert.DeserializeObject<Movement[]>(json);
+
+        if (moveList.Any())
+        {
+            Debug.Log(moveList);
+        }
+
+        return moveList;
     }
 }

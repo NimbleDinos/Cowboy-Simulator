@@ -8,6 +8,7 @@ from discord.ext import commands
 import player
 import ability
 import APIMethods
+from player import locationList
 
 import db
 
@@ -90,6 +91,20 @@ async def leave(ctx):
 async def goto(ctx, location):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
+
+	player_status = database.select_active_players(userID)
+	print(player_status)
+	if player_status[0] == (1,):
+		if location.lower() in locationList:
+			# TODO: update db with new loc
+			#TODO: do thing to get time here
+			time = 30
+			api_message = APIMethods.move_to_request(userID, location.lower(), time)
+			await ctx.send(api_message)
+		else:
+			await ctx.send("Sorry but {0} isn't a valid place".format(location.lower()))
+	else:
+		await ctx.send("You aren't in the game yet, {0}".format(userName))
 
 	for player in playerList:
 		if player.id == userID:
