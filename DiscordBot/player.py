@@ -27,10 +27,12 @@ class playerClass():
     lasso = 0
     pickaxe = 0
     
+    # stops health going above 100
     def healthCap():
         if self.health > 100:
             self.health = 100
 
+    # sets new location
     def goToLocation(self,location):
         check = False
         for x in locationList:
@@ -42,3 +44,8 @@ class playerClass():
             return 0
         else:
             return 1
+    
+    # changes players location when game says they have arrived
+    def updateLocation(location):
+        self.currcurrentLocation = location
+    

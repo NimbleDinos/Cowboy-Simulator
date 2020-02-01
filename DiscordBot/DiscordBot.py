@@ -16,17 +16,20 @@ client.remove_command("help")
 # global variables
 playerList = []
 
+# bot startup messages
 @client.event
 async def on_ready():
 	print("Bot is online")
 	print("Name: Cowboy Simulator")
 	print("TD: {}".format(client.user.id))
 
+# test command
 @client.command()
 async def test(ctx):
 	await ctx.send("Hello, this is a test!")
 
 
+# join game command
 @client.command()
 async def join(ctx):
 	userID = ctx.message.author.id
@@ -43,6 +46,7 @@ async def join(ctx):
 		playerList.append(newPlayer)
 		await ctx.send("You have joined the game " + userName + "!")
 
+# go to command
 @client.command()
 async def goto(ctx, location):
 	userID = ctx.message.author.id
