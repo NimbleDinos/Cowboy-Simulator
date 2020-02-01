@@ -106,15 +106,6 @@ async def goto(ctx, location):
 	else:
 		await ctx.send("You aren't in the game yet, {0}".format(userName))
 
-	for player in playerList:
-		if player.id == userID:
-			returnCheck = player.goToLocation(location)
-			if returnCheck == 0:
-				await ctx.send("You are moving to: " + location + ", " + userName)
-			if returnCheck == 1:
-				await ctx.send("That's an invalid input partner " + userName)
-
-
 @client.event
 async def on_message(message):
 	if message.author.bot:
