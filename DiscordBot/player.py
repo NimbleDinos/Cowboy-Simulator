@@ -3,20 +3,21 @@ import random
 
 locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range"]
 
+
 def playerTest():
     print("playerTest")
 
+
 class playerClass():
-    
     id = 0
     currentLocation = "town"
 
     # abilities
-    Shooting = ability.abilityClass()
-    Hattitude = ability.abilityClass()
-    Riding = ability.abilityClass()
-    Catching = ability.abilityClass()
-    Mining = ability.abilityClass()
+    Shooting = ability.AbilityClass()
+    Hattitude = ability.AbilityClass()
+    Riding = ability.AbilityClass()
+    Catching = ability.AbilityClass()
+    Mining = ability.AbilityClass()
 
     # inventory
     health = 100
@@ -27,10 +28,7 @@ class playerClass():
     horse = 0
     lasso = 0
     pickaxe = 0
-<<<<<<< Updated upstream
     
-=======
-
     def panAction(self):
         chanceToFindGold = 0.1 # Don't replace this one
         randomNumber = random.uniform(0, 1)
@@ -62,33 +60,26 @@ class playerClass():
 
     def mineAction(self):
         ChanceToFindGold = 0.1 # Replace with maths to calculate chance
-        
 
->>>>>>> Stashed changes
     # stops health going above 100
-    def healthCap():
+    def healthCap(self):
         if self.health > 100:
             self.health = 100
 
     # sets new location
-    def goToLocation(self,location):
+    def goToLocation(self, location):
         check = False
-        for x in locationList:
-            if x == location:
-                # send message to move to new location here
-                check = True
-        
-        if check == True:
+
+        if location in locationList:
+            # send message to move to new location here
+            check = True
+
+        if check:
             return 0
         else:
             return 1
-    
+
     # changes players location when game says they have arrived
-<<<<<<< Updated upstream
-    def updateLocation(location):
-        self.currcurrentLocation = location
-    
-=======
     def updateLocation(self, location):
         self.currentLocation = location
->>>>>>> Stashed changes
+

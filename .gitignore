@@ -2,6 +2,7 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
+Cowboy Simulator/Library/
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -289,3 +290,5 @@ dmypy.json
 .pyre/
 
 DiscordBot/token.txt
+
+.DS_Store
