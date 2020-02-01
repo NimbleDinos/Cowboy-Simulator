@@ -27,8 +27,9 @@ async def on_message(message):
 	if message.author.bot:
 	    return
 
+	# THIS THING FUCKING DONT WORK
 	if "a" in message.content.lower():
-		thing = discord.guild.members
+		thing = message.server.members
 		for x in thing:
 			print(x)
 	

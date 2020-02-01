@@ -24,6 +24,7 @@
     <Compile Include="DiscordBot.py" />
     <Compile Include="ability.py">
       <SubType>Code</SubType>
+    </Compile>
     <Compile Include="player.py">
       <SubType>Code</SubType>
     </Compile>
