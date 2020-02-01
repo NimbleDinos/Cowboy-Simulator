@@ -52,3 +52,9 @@ class Database:
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_update_player_status, (status, player_id))
         self.conn.commit()
+
+    def select_active_players(self, player_id):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_active_player, (player_id,))
+        rows = cur.fetchall()
+        return rows
