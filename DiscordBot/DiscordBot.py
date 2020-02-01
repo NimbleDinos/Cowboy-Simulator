@@ -13,6 +13,9 @@ bot_prefix = "!"
 client = commands.Bot(command_prefix=bot_prefix)
 client.remove_command("help")
 
+# global variables
+playerList = []
+
 @client.event
 async def on_ready():
 	print("Bot is online")
@@ -22,6 +25,7 @@ async def on_ready():
 @client.command()
 async def test(ctx):
 	await ctx.send("Hello, this is a test!")
+
 
 @client.command()
 async def join(ctx):
@@ -36,16 +40,26 @@ async def join(ctx):
 		# add user to game database
 		newPlayer = player.playerClass()
 		newPlayer.id = userID
-		
+		playerList.append(newPlayer)
 		await ctx.send("You have joined the game " + userName + "!")
+
+@client.command()
+async def goto(ctx, location):
+	userID = ctx.message.author.id
+	userName = ctx.message.author.name
+
+	for player in playerList:
+		if player.id == userID:
+			returnCheck = player.goToLocation(location)
+			if returnCheck == 0:
+			    await ctx.send("You are moving to: " + location + ", " + userName)
+			if returnCheck == 1:
+				await ctx.send("That's an invalid input partner " + userName)
 
 @client.event
 async def on_message(message):
 	if message.author.bot:
 	    return
-
-	if "a" in message.content.lower():
-		pass
 	
 	await client.process_commands(message)
 
