@@ -4,6 +4,8 @@ def playerTest():
     print("playerTest")
 
 class playerClass():
+    
+    id = 0
 
     # abilities
     Shooting = ability.abilityClass()
@@ -20,6 +22,8 @@ class playerClass():
     hat = 0
     horse = 0
     lasso = 0
+    pickaxe = 0
     
-    def update():
-        pass
+    def healthCap():
+        if self.Health > 100:
+            self.Health = 100

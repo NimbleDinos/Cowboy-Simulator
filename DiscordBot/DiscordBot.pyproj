@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="APIMethods.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DiscordBot.py" />
     <Compile Include="ability.py">
       <SubType>Code</SubType>
