@@ -132,6 +132,11 @@ class Database:
         rows = cur.fetchall()
         return rows
 
+    def update_all_player_status(self):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_all_player_status, ())
+        self.conn.commit()
+
     def update_player_status(self, player_id, status):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_update_player_status, (status, player_id))

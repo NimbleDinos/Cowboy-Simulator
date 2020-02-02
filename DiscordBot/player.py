@@ -107,103 +107,112 @@ class playerClass():
 
     # buy item
     def buyItem(self, item, amount):
-        total_cost = 0
-        (current_gold,) = self.database.select_user_gold(self.player_id)[0]
+        try:
+            int_amount = int(amount)
 
-        if item == "gun":
-            total_cost = itemPrices[0] * amount
-        if item == "booze":
-            total_cost = itemPrices[1] * amount
-        if item == "hat":
-            total_cost = itemPrices[2] * amount
-        if item == "horse":
-            total_cost = itemPrices[3] * amount
-        if item == "lasso":
-            total_cost = itemPrices[4] * amount
-        if item == "pickaxe":
-            total_cost = itemPrices[5] * amount
-        
-        if current_gold - total_cost < 0:
-            return 0    # tell player cannot do this
-        else:
-            self.database.update_player_gold(self.player_id, current_gold - total_cost)
+            total_cost = 0
+            (current_gold,) = self.database.select_user_gold(self.player_id)[0]
+
             if item == "gun":
-                (gun_count,) = self.database.select_user_gun(self.player_id)[0]
-                self.database.update_player_gun(self.player_id, gun_count + amount)
+                total_cost = itemPrices[0] * int_amount
             if item == "booze":
-                (booze_count,) = self.database.select_user_booze(self.player_id)[0]
-                self.database.update_player_booze(self.player_id, booze_count + amount)
+                total_cost = itemPrices[1] * int_amount
             if item == "hat":
-                (hat_count,) = self.database.select_user_hat(self.player_id)[0]
-                self.database.update_player_hat(self.player_id, hat_count + amount)
+                total_cost = itemPrices[2] * int_amount
             if item == "horse":
-                (horse_count,) = self.database.select_user_horse(self.player_id)[0]
-                self.database.update_player_horse(self.player_id, horse_count + amount)
+                total_cost = itemPrices[3] * int_amount
             if item == "lasso":
-                (lasso_count,) = self.database.select_user_lasso(self.player_id)[0]
-                self.database.update_player_lasso(self.player_id, lasso_count + amount)
+                total_cost = itemPrices[4] * int_amount
             if item == "pickaxe":
-                (pickaxe_count,) = self.database.select_user_pickaxe(self.player_id)[0]
-                self.database.update_player_pickaxe(self.player_id, pickaxe_count + amount)
-            
-            return 1    # tell player can do this and that it happened
+                total_cost = itemPrices[5] * int_amount
+            if current_gold - total_cost < 0:
+                return 0  # tell player cannot do this
+            else:
+                self.database.update_player_gold(self.player_id, current_gold - total_cost)
+                if item == "gun":
+                    (gun_count,) = self.database.select_user_gun(self.player_id)[0]
+                    self.database.update_player_gun(self.player_id, gun_count + int_amount)
+                if item == "booze":
+                    (booze_count,) = self.database.select_user_booze(self.player_id)[0]
+                    self.database.update_player_booze(self.player_id, booze_count + int_amount)
+                if item == "hat":
+                    (hat_count,) = self.database.select_user_hat(self.player_id)[0]
+                    self.database.update_player_hat(self.player_id, hat_count + int_amount)
+                if item == "horse":
+                    (horse_count,) = self.database.select_user_horse(self.player_id)[0]
+                    self.database.update_player_horse(self.player_id, horse_count + int_amount)
+                if item == "lasso":
+                    (lasso_count,) = self.database.select_user_lasso(self.player_id)[0]
+                    self.database.update_player_lasso(self.player_id, lasso_count + int_amount)
+                if item == "pickaxe":
+                    (pickaxe_count,) = self.database.select_user_pickaxe(self.player_id)[0]
+                    self.database.update_player_pickaxe(self.player_id, pickaxe_count + int_amount)
+
+                return 1  # tell player can do this and that it happened
+        except:
+            return 3
+
 
     # sell item
     def sellItem(self, item, amount):
-        sell_total = 0
-        (current_gold,) = self.database.select_user_gold(self.player_id)[0]
+        try:
+            int_amount = int(amount)
+            sell_total = 0
+            (current_gold,) = self.database.select_user_gold(self.player_id)[0]
 
-        if item == "gun":
-            (gun_count,) = self.database.select_user_gun(self.player_id)[0]
-            sell_total = itemPrices[0] * amount
-            if amount > gun_count:
-                return 1    # tell player cannot do this
-            else:
-                self.database.update_player_gun(self.player_id, gun_count - amount)
-                self.database.update_player_gold(self.player_id, sell_total + current_gold)
-                return 0    # tell player it done
-        if item == "booze":
-            (booze_count,) = self.database.select_user_booze(self.player_id)[0]
-            sell_total = itemPrices[1] * amount
-            if amount > booze_count:
-                return 1    # tell player cannot do this
-            else:
-                self.database.update_player_gun(self.player_id, booze_count - amount)
-                self.database.update_player_gold(self.player_id, sell_total + current_gold)
-                return 0    # tell player it done
-        if item == "hat":
-            (hat_count,) = self.database.select_user_hat(self.player_id)[0]
-            sell_total = itemPrices[2] * amount
-            if amount > hat_count:
-                return 1    # tell player cannot do this
-            else:
-                self.database.update_player_hat(self.player_id, hat_count - amount)
-                self.database.update_player_gold(self.player_id, sell_total + current_gold)
-                return 0    # tell player it done
-        if item == "horse":
-            (horse_count,) = self.database.select_user_horse(self.player_id)[0]
-            sell_total = itemPrices[3] * amount
-            if amount > horse_count:
-                return 1    # tell player cannot do this
-            else:
-                self.database.update_player_horse(self.player_id, horse_count - amount)
-                self.database.update_player_gold(self.player_id, sell_total + current_gold)
-                return 0    # tell player it done
-        if item == "lasso":
-            (lass_count,) = self.database.select_user_lasso(self.player_id)[0]
-            sell_total = itemPrices[4] * amount
-            if amount > lass_count:
-                return 1    # tell player cannot do this
-            else:
-                self.database.update_player_lasso(self.player_id, lass_count - amount)
-                self.database.update_player_gold(self.player_id, sell_total + current_gold)
-                return 0    # tell player it done
-        if item == "pickaxe":
-            (pickaxe_count,) = self.database.select_user_pickaxe(self.player_id)[0]
-            sell_total = itemPrices[5] * amount
-            if amount > pickaxe_count:
-                return 1    # tell player cannot do this
-            else:
-                self.database.update_player_pickaxe(self.player_id, pickaxe_count - amount)
-                self.database.update_player_gold(self.player_id, sell_total + current_gold)
-                return 0    # tell player it done
+            if item == "gun":
+                (gun_count,) = self.database.select_user_gun(self.player_id)[0]
+                sell_total = itemPrices[0] * int_amount
+                if int_amount > gun_count:
+                    return 1    # tell player cannot do this
+                else:
+                    self.database.update_player_gun(self.player_id, gun_count - int_amount)
+                    self.database.update_player_gold(self.player_id, sell_total + current_gold)
+                    return 0    # tell player it done
+            if item == "booze":
+                (booze_count,) = self.database.select_user_booze(self.player_id)[0]
+                sell_total = itemPrices[1] * int_amount
+                if int_amount > booze_count:
+                    return 1    # tell player cannot do this
+                else:
+                    self.database.update_player_gun(self.player_id, booze_count - int_amount)
+                    self.database.update_player_gold(self.player_id, sell_total + current_gold)
+                    return 0    # tell player it done
+            if item == "hat":
+                (hat_count,) = self.database.select_user_hat(self.player_id)[0]
+                sell_total = itemPrices[2] * int_amount
+                if int_amount > hat_count:
+                    return 1    # tell player cannot do this
+                else:
+                    self.database.update_player_hat(self.player_id, hat_count - int_amount)
+                    self.database.update_player_gold(self.player_id, sell_total + current_gold)
+                    return 0    # tell player it done
+            if item == "horse":
+                (horse_count,) = self.database.select_user_horse(self.player_id)[0]
+                sell_total = itemPrices[3] * int_amount
+                if int_amount > horse_count:
+                    return 1    # tell player cannot do this
+                else:
+                    self.database.update_player_horse(self.player_id, horse_count - int_amount)
+                    self.database.update_player_gold(self.player_id, sell_total + current_gold)
+                    return 0    # tell player it done
+            if item == "lasso":
+                (lass_count,) = self.database.select_user_lasso(self.player_id)[0]
+                sell_total = itemPrices[4] * int_amount
+                if int_amount > lass_count:
+                    return 1    # tell player cannot do this
+                else:
+                    self.database.update_player_lasso(self.player_id, lass_count - int_amount)
+                    self.database.update_player_gold(self.player_id, sell_total + current_gold)
+                    return 0    # tell player it done
+            if item == "pickaxe":
+                (pickaxe_count,) = self.database.select_user_pickaxe(self.player_id)[0]
+                sell_total = itemPrices[5] * int_amount
+                if int_amount > pickaxe_count:
+                    return 1    # tell player cannot do this
+                else:
+                    self.database.update_player_pickaxe(self.player_id, pickaxe_count - int_amount)
+                    self.database.update_player_gold(self.player_id, sell_total + current_gold)
+                    return 0    # tell player it done
+        except:
+            return 3

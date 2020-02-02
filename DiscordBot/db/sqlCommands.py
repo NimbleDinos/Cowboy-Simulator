@@ -95,6 +95,9 @@ sql_select_pickaxe = """SELECT pickaxe
 
 # ---- UPDATE STATEMENTS ----
 
+sql_update_all_player_status = """UPDATE players
+                                SET status=0;"""
+
 sql_update_player_status = """UPDATE players
                             SET status=?
                             WHERE id=?"""

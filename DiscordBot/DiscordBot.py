@@ -28,6 +28,7 @@ database_loc = r"./db/database.sql"
 database = db.database.Database(database_loc)
 database.create_player_table()
 database.create_inventory_table()
+database.update_all_player_status()
 
 # bot startup messages
 @client.event
@@ -45,7 +46,6 @@ async def update():
 			location_obj = database.select_player_place(person.player_id)
 			test = database.select_user_gold(person.player_id)
 			print("GOLD {0}".format(test))
-			print(location_obj)
 			(loc,) = location_obj[0]
 			# do thing based on location
 			if loc == "travelling":
@@ -99,12 +99,11 @@ async def join(ctx):
 	userName = ctx.message.author.name
 
 	player_exist = database.select_player_exists(userID)
-	# print(player_exist)
 
 	if (len(player_exist)) == 0:
 		player_data = (userID, 1, "town", True)
 		database.add_player(player_data)
-		inventory_data = (userID, 100, 1, 1, 1, 1, 1, 1, 1)
+		inventory_data = (userID, 100, 100, 100, 100, 100, 100, 100, 100)
 		database.add_inventory(inventory_data)
 
 		new_player = player.playerClass(database, userID)
@@ -113,6 +112,7 @@ async def join(ctx):
 		await ctx.send(api_message)
 	else:
 		player_status = database.select_player_status(userID)
+		print(player_status)
 		if player_status[0] == (0,):
 			database.update_player_status(userID, 1)
 			api_message = APIMethods.join_game_request(userID, userName)
@@ -165,29 +165,44 @@ async def goto(ctx, location):
 async def buy(ctx, item, amount):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
-	
-	if True: # if player is in a town
-		didItWork = player.buyItem(item, amount) # this needs to be assigned to a player
-		if didItWork == 0:
-			await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
+
+	(intown,) = database.select_player_intwon(userID)[0]
+	for person in active_player_list:
+		if person.player_id == userID:
+			if intown: # if player is in a town
+				didItWork = person.buyItem(item, amount) # this needs to be assigned to a player
+				if didItWork == 0:
+					await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
+				elif didItWork == 1:
+					await ctx.send("Trade successful partner! {0}".format(userName))
+				else:
+					await ctx.send("That was an invalid input {0}!".format(userName))
+			else:
+				await ctx.send("You're not in a Town Partner! {0}".format(userName))
 		else:
-			await ctx.send("Trade successful partner! {0}".format(userName))
-	else:
-		await ctx.send("You're not in a Town Partner! {0}".format(userName))
+			await ctx.send("You are not in the game! {0}".format(userName))
 
 @client.command()
 async def sell(ctx, item, amount):
-	userID = ctx.mesasge.author.id
+	userID = ctx.message.author.id
 	userName = ctx.message.author.name
 
-	if True: # if player is in a town
-		didItWork = sellItem(item, amount) # this needs to be assigned to a player
-		if didItWork == 0:
-			await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
-		else:
-			await ctx.send("Trade successful partner! {0}".format(userName))
-	else:
-		await ctx.send("You're not in a town partner! {0}".format(userName))
+	(intown,) = database.select_player_intwon(userID)[0]
+	for person in active_player_list:
+		if person.player_id == userID:
+			if intown: # if player is in a town
+				didItWork = person.sellItem(item, amount) # this needs to be assigned to a player
+				if didItWork == 1:
+					await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
+				elif didItWork == 0:
+					await ctx.send("Trade successful partner! {0}".format(userName))
+				else:
+					await ctx.senf("That was an invalid input {0}!".format(userName))
+			else:
+				await ctx.send("You're not in a town partner! {0}".format(userName))
+			break
+		# else:
+			# await ctx.send("You are not in the game! {0}".format(userName))
 
 @client.event
 async def on_message(message):
