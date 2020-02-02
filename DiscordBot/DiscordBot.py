@@ -150,8 +150,6 @@ async def goto(ctx, location):
 	loc = location.lower()
 	if player_status[0] == (1,):
 		if loc in locationList:
-			# TODO: update db with new loc
-			print(loc)
 			database.update_player_place(userID, loc)
 			#TODO: do thing to get time here
 			time = 30
@@ -169,9 +167,9 @@ async def buy(ctx, item, amount):
 	userName = ctx.message.author.name
 	
 	if True: # if player is in a town
-		didItWork = buyItem(item, amount) # this needs to be assigned to a player
+		didItWork = player.buyItem(item, amount) # this needs to be assigned to a player
 		if didItWork == 0:
-		    await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
+			await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
 		else:
 			await ctx.send("Trade successful partner! {0}".format(userName))
 	else:
@@ -185,7 +183,7 @@ async def sell(ctx, item, amount):
 	if True: # if player is in a town
 		didItWork = sellItem(item, amount) # this needs to be assigned to a player
 		if didItWork == 0:
-		    await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
+			await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
 		else:
 			await ctx.send("Trade successful partner! {0}".format(userName))
 	else:
