@@ -43,6 +43,7 @@ async def on_ready():
 # Update loop
 async def update():
 	while True:
+		print(active_player_list)
 		for person in active_player_list:
 			location_obj = database.select_player_place(person.player_id)
 			test = database.select_user_gold(person.player_id)
@@ -64,6 +65,7 @@ async def update():
 				database.update_player_intown(person.player_id, False)
 				person.ridingAction()
 			if loc == "gold-mine":
+				print("IN IF")
 				database.update_player_intown(person.player_id, False)
 				person.mineAction()
 			if loc == "plains":
