@@ -122,7 +122,7 @@ sql_update_gun = """UPDATE inventory
                         SET gun=?
                         WHERE id=?"""
 
-sql_update_booze = """UPDATE booze
+sql_update_booze = """UPDATE inventory
                         SET booze=?
                         WHERE id=?"""
 
