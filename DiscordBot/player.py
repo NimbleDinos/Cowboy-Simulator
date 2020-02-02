@@ -59,7 +59,7 @@ class playerClass():
                 (curr_gold,) = curr_gold_thing[0]
                 # print(curr_gold)
                 self.database.update_player_gold(self.player_id, curr_gold + 1)
-            self.database.update_player_place(self.player_id, pickaxe_count - 1)
+            self.database.update_player_pickaxe(self.player_id, pickaxe_count - 1)
             self.Mining.updateXP()
 
     def ridingAction(self):
