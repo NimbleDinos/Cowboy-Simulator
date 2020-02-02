@@ -1,21 +1,23 @@
-
 # Other File Imports
 import logisticFunc
 import ability
 import random
 
-locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range", "travelling"]
+locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range",
+                "travelling"]
 
 # item order gun, booze, hat, horse, lasso, pickaxe
 itemPrices = [30, 2, 5, 50, 4, 8]
 
+
 def playerTest():
     print("playerTest")
 
+
 class playerClass():
-    id = 0
-    currentLocation = "town"
-    inTown = False
+    def __init__(self, database, player_id):
+        self.database = database
+        self.player_id = player_id
 
     # abilities
     Shooting = ability.AbilityClass()
@@ -33,13 +35,16 @@ class playerClass():
     horse = 0
     lasso = 0
     pickaxe = 0
-    
+
     def panAction(self):
-        chanceToFindGold = 0.1 # Don't replace this one
+        chanceToFindGold = 0.1  # Don't replace this one
         randomNumber = random.uniform(0, 1)
         if chanceToFindGold > randomNumber:
-            self.gold += 1
-        
+            curr_gold_thing = self.database.select_user_gold(self.player_id)
+            (curr_gold,) = curr_gold_thing[0]
+            print(curr_gold)
+            self.database.update_player_gold(self.player_id, curr_gold + 1)
+
         # random generator to pick ability to level up
         randomAbility = random.randint(0, 4)
         if randomAbility == 0:
@@ -71,7 +76,7 @@ class playerClass():
         if self.gun > 0 and self.health > 1:
             self.gun -= 1
             self.Shooting.updateXP()
-            
+
             chanceToBeShot = logisticFunc.logistic_func(self.Shooting.level)
             randomNumber = random.uniform(0, 1)
             if chanceToBeShot < randomNumber:
@@ -135,7 +140,3 @@ class playerClass():
             return 0
         else:
             return 1
-
-    # changes players location when game says they have arrived
-    def updateLocation(self, location):
-        self.currentLocation = location

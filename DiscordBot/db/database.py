@@ -30,9 +30,21 @@ class Database:
         else:
             print("Error: Could not establish connection to database")
 
+    def create_inventory_table(self):
+        if self.conn is not None:
+            self.create_table(db.sqlCommands.sql_create_inventory_table)
+        else:
+            print("Error: Could not establish connection to database")
+
     def add_player(self, player):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_insert_player, player)
+        self.conn.commit()
+        return cur.lastrowid
+
+    def add_inventory(self, inventory):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_insert_inventory, inventory)
         self.conn.commit()
         return cur.lastrowid
 
@@ -54,6 +66,18 @@ class Database:
         rows = cur.fetchall()
         return rows
 
+    def select_player_place(self, player_id):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_player_place, (player_id,))
+        rows = cur.fetchall()
+        return rows
+
+    def select_player_intwon(self, player_id):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_player_intown, (player_id,))
+        rows = cur.fetchall()
+        return rows
+
     def select_user_inventory(self, player_id):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_select_all_inventory, (player_id,))
@@ -63,6 +87,12 @@ class Database:
     def select_user_health(self, player_id):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_select_health, (player_id,))
+        rows = cur.fetchall()
+        return rows
+
+    def select_user_gold(self, player_id):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_gold, (player_id,))
         rows = cur.fetchall()
         return rows
 
@@ -107,6 +137,16 @@ class Database:
         cur.execute(db.sqlCommands.sql_update_player_status, (status, player_id))
         self.conn.commit()
 
+    def update_player_place(self, player_id, place):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_player_place, (place, player_id))
+        self.conn.commit()
+
+    def update_player_intown(self, player_id, in_town):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_player_intown, (in_town, player_id))
+        self.conn.commit()
+
     def update_player_health(self, player_id, health):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_update_health, (health, player_id))
@@ -146,4 +186,3 @@ class Database:
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_update_pickaxe, (pickaxe, player_id))
         self.conn.commit()
-        

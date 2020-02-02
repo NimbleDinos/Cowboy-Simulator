@@ -2,7 +2,9 @@
 
 sql_create_users_table = """CREATE TABLE IF NOT EXISTS players (
                                 id INTEGER PRIMARY KEY,
-                                status INTEGER
+                                status INTEGER,
+                                place TEXT,
+                                intown BOOLEAN
                         ); """
 
 sql_create_inventory_table = """CREATE TABLE IF NOT EXISTS inventory (
@@ -17,11 +19,11 @@ sql_create_inventory_table = """CREATE TABLE IF NOT EXISTS inventory (
                                 pickaxe INTEGER
                         );"""
 
-sql_insert_player = """INSERT INTO players(id, status)
-                        VALUES(?, ?) """
+sql_insert_player = """INSERT INTO players(id, status, place, intown)
+                        VALUES(?, ?, ?, ?) """
 
 sql_insert_inventory = """INSERT INTO inventory(id, health, gold, gun, booze, hat, horse, lasso, pickaxe)
-                        VALUES(?, ?, ?, ?, ?, ? ,? ,?, ?)"""
+                        VALUES(?, ?, ?, ?, ?, ? ,? ,?, ?) """
 
 
 # ---- SELECT STATEMENTS ----
@@ -37,6 +39,14 @@ sql_select_active_player = """SELECT 1
                             FROM players
                             WHERE status=1
                             AND id=?"""
+
+sql_select_player_place = """SELECT place
+                            FROM players
+                            WHERE id=?"""
+
+sql_select_player_intown = """SELECT intown
+                            FROM players
+                            WHERE id=?"""
 
 sql_select_all_inventory = """SELECT * 
                             FROM inventory
@@ -87,6 +97,14 @@ sql_select_pickaxe = """SELECT pickaxe
 
 sql_update_player_status = """UPDATE players
                             SET status=?
+                            WHERE id=?"""
+
+sql_update_player_place = """UPDATE players
+                            SET place=?
+                            WHERE id=?"""
+
+sql_update_player_intown = """UPDATE players
+                            SET intown=?
                             WHERE id=?"""
 
 sql_update_health = """UPDATE inventory
