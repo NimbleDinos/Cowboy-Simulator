@@ -35,6 +35,9 @@ public class Bob : MonoBehaviour
                     case "shooting-range":
                         item.GetComponent<PlayerGoToPlaceScript>().Shot();
                         break;
+                    case "river":
+                        item.GetComponent<PlayerGoToPlaceScript>().River();
+                        break;
                 }
             }
         }

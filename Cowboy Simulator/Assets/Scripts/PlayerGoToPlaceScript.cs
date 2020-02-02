@@ -14,6 +14,9 @@ public class PlayerGoToPlaceScript : MonoBehaviour
 
     GameObject[] Places;
 
+    public Color jeff;
+    public int r, g, b;
+
     // Start is called before the first frame update
     public void Setup()
     {
@@ -54,6 +57,9 @@ public class PlayerGoToPlaceScript : MonoBehaviour
         }
 
         Hull();
+
+
+        this.GetComponent<SpriteRenderer>().color = new Color32((byte)Random.Range(0, 256), (byte)Random.Range(0, 256), (byte)Random.Range(0, 256),  255);
 
     }
 
