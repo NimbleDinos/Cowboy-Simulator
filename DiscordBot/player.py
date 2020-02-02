@@ -1,16 +1,20 @@
 # Discord Imports
-import ability
-import random
+import discord
+import discord.ext
+from discord.ext.commands import Bot
+from discord.ext import commands
 
 # Other File Imports
 import logisticFunc
+import ability
+import random
 
-locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range"]
-
+bot_prefix = "!"
+client = commands.Bot(command_prefix=bot_prefix)
+locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range", "travelling"]
 
 def playerTest():
     print("playerTest")
-
 
 class playerClass():
     id = 0
@@ -51,20 +55,35 @@ class playerClass():
             self.Catching.updateXP()
         if randomAbility == 4:
             self.Mining.updateXP()
-        
-        print("chanceToFindGold: " + str(chanceToFindGold))
-        print("randomNumber: " + str(randomNumber))
-        print("randomAbility: " + str(randomAbility))
-        
-        print("XP:" +str(self.Shooting.XP))
-        print("XP:" +str(self.Hattitude.XP))
-        print("XP:" +str(self.Riding.XP))
-        print("XP:" +str(self.Catching.XP))
-        print("XP:" +str(self.Mining.XP))
 
     def mineAction(self):
-        ChanceToFindGold = logisticFunc.logistic_func(self.Mining.level)
-        print(ChanceToFindGold)
+        if self.pickaxe > 0:
+            chanceToFindGold = logisticFunc.logistic_func(self.Mining.level)
+            randomNumber = random.uniform(0, 1)
+            if chanceToFindGold > randomNumber:
+                self.gold += 3
+            self.pickaxe -= 1
+            self.Mining.updateXP()
+
+    def ridingAction(self):
+        if self.horse > 0:
+            self.horse -= 1;
+            self.Riding.updateXP()
+
+    def shootingAction(self):
+        if self.gun > 0 and self.health > 1:
+            self.gun -= 1
+            self.Shooting.updateXP()
+            
+            chanceToBeShot = logisticFunc.logistic_func(self.Shooting.level)
+            randomNumber = random.uniform(0, 1)
+            if chanceToBeShot < randomNumber:
+                self.health -= 1
+
+    def hatAction(self):
+        if self.hat > 0:
+            self.hat -= 1
+            self.Hattitude.updateXP()
 
     # stops health going above 100
     def healthCap(self):
@@ -87,4 +106,3 @@ class playerClass():
     # changes players location when game says they have arrived
     def updateLocation(self, location):
         self.currentLocation = location
-

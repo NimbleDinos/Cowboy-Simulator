@@ -1,3 +1,6 @@
+import datetime
+import asyncio
+
 # Discord Imports
 import discord
 import discord.ext
@@ -11,6 +14,8 @@ import APIMethods
 import logisticFunc
 
 import db
+
+locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range", "travelling"]
 
 bot_prefix = "!"
 client = commands.Bot(command_prefix=bot_prefix)
@@ -30,6 +35,13 @@ async def on_ready():
 	print("Name: Cowboy Simulator")
 	print("TD: {}".format(client.user.id))
 
+	client.loop.create_task(update())
+
+# Update loop
+async def update():
+	while True:
+		print("Test")
+		await asyncio.sleep(1)
 
 # test command
 @client.command()
@@ -39,7 +51,7 @@ async def test(ctx):
 	userName = ctx.message.author.name
 	
 	me = player.playerClass()
-	me.panAction()
+	
 
 # join game command
 @client.command()
@@ -112,7 +124,6 @@ async def on_message(message):
 		return
 
 	await client.process_commands(message)
-
 
 file = open("token.txt", "r")
 token = str(file.read())

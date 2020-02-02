@@ -1,4 +1,4 @@
-import requests
+#import requests
 
 baseUrl = "http://localhost:8081/"
 
