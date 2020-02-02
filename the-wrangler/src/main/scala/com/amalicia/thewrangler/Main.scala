@@ -36,10 +36,9 @@ object Main extends App {
   }
 
   def movePlayer: Endpoint[IO, String] =
-    get("movePlayer" :: param[Long]("userId") :: paramOption[String]("town") :: paramOption[String]("place") :: param[Int]("time")) {
-      (userId: Long, town: Option[String], place: Option[String], time: Int) ⇒
-        val validPlayerMovement = MovePlayer.validatePlayerMovement(userId, town, place, time)
-        validPlayerMovement.fold(error ⇒ BadRequest(error), move ⇒ { playerMoveList += move; Ok(s"Move update for userId=$userId added to list") })
+    get("movePlayer" :: param[Long]("userId") :: param("place") :: param[Int]("time")) { (userId: Long, place: String, time: Int) ⇒
+      val validPlayerMovement = MovePlayer.validatePlayerMovement(userId, place, time)
+      validPlayerMovement.fold(error ⇒ BadRequest(error), move ⇒ { playerMoveList += move; Ok(s"Move update for userId=$userId added to list") })
     }
 
   def getMovements: Endpoint[IO, Json] = get("getMovement") {
