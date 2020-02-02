@@ -1,3 +1,6 @@
+import datetime
+import asyncio
+
 # Discord Imports
 import discord
 import discord.ext
@@ -11,6 +14,8 @@ import APIMethods
 import logisticFunc
 
 import db
+
+locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range", "travelling"]
 
 bot_prefix = "!"
 client = commands.Bot(command_prefix=bot_prefix)
@@ -30,6 +35,53 @@ async def on_ready():
 	print("Name: Cowboy Simulator")
 	print("TD: {}".format(client.user.id))
 
+	client.loop.create_task(update())
+
+	for x in playerList:
+	    x.currentLocation = "plains"
+
+# Update loop
+async def update():
+	while True:
+		for person in playerList:
+
+			# do thing based on location
+			if person.currentLocation == "travelling":
+				inTown = False
+			if person.currentLocation == "hull":
+				inTown = True
+				person.hatAction()
+			if person.currentLocation == "lincoln":
+				inTown = True
+				person.hatAction()
+			if person.currentLocation == "sheffield":
+				inTown = True
+				person.hatAction()
+			if person.currentLocation == "corral":
+				inTown = False
+				person.ridingAction()
+			if person.currentLocation == "gold-mine":
+				inTown = False
+				person.mineAction()
+			if person.currentLocation == "plains":
+				inTown = False
+				person.catchAction()
+			if person.currentLocation == "river":
+				inTown = False
+				person.panAction()
+			if person.currentLocation == "shooting-range":
+				inTown = False
+				person.shootingAction()
+			
+			# update health
+			person.healAction()
+
+		print("Jobs Done")
+		await asyncio.sleep(1)
+
+# update users role
+async def roleUpdate():
+	pass
 
 # test command
 @client.command()
@@ -37,9 +89,6 @@ async def test(ctx):
 	await ctx.send("Hello, this is a test!")
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
-	
-	me = player.playerClass()
-	me.panAction()
 
 # join game command
 @client.command()
@@ -106,13 +155,23 @@ async def goto(ctx, location):
 	else:
 		await ctx.send("You aren't in the game yet, {0}".format(userName))
 
+# buy command
+@client.command()
+async def buy(ctx, item):
+	userID = ctx.message.author.id
+	userName = ctx.message.author.name
+	
+	if 1 == 1: # if player is in a town
+		buyItem(item)
+	else:
+		await ctx.send("You're not in a Town Partner! {0}".format(userName))
+
 @client.event
 async def on_message(message):
 	if message.author.bot:
 		return
 
 	await client.process_commands(message)
-
 
 file = open("token.txt", "r")
 token = str(file.read())
