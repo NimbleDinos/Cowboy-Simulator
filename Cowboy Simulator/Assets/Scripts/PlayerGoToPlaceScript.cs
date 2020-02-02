@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class PlayerGoToPlaceScript : MonoBehaviour
 {
-    public GameObject objHull, objMine, objSheffield, objLincoln, objhorseRide, objHorseCatch, objShot;
+    public GameObject objHull, objMine, objSheffield, objLincoln, objhorseRide, objHorseCatch, objShot, objRiver;
     Transform TargObj;
     Vector3 Target;
     public string name;
@@ -46,6 +46,9 @@ public class PlayerGoToPlaceScript : MonoBehaviour
                     break;
                 case "Shot":
                     objShot = Places[i];
+                    break;
+                case "River":
+                    objRiver = Places[i];
                     break;
             }
         }
@@ -136,6 +139,12 @@ public class PlayerGoToPlaceScript : MonoBehaviour
         Target = TargObj.position;
     }
 
+    public void River()
+    {
+        TargObj = objRiver.transform;
+        Target = TargObj.position;
+    }
+
 }
 
 [CustomEditor(typeof(PlayerGoToPlaceScript))]
@@ -186,6 +195,11 @@ public class CityGenButts : Editor
             if (GUILayout.Button("GoTo Shoot"))
             {
                 script.Shot();
+            }
+
+            if(GUILayout.Button("GoTo River"))
+            {
+                script.River();
             }
         }
     }
