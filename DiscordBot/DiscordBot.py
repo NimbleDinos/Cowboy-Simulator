@@ -44,7 +44,6 @@ async def on_ready():
 # Update loop
 async def update():
 	while True:
-		print(active_player_list)
 		for person in active_player_list:
 			location_obj = database.select_player_place(person.player_id)
 			test = database.select_user_gold(person.player_id)
@@ -104,12 +103,11 @@ async def join(ctx):
 
 	player_exist = database.select_player_exists(userID)
 	# print(player_exist)
-	print("in command")
 
 	if (len(player_exist)) == 0:
 		player_data = (userID, 1, "town", True)
 		database.add_player(player_data)
-		inventory_data = (userID, 100, 0, 0, 0, 0, 0, 0, 0)
+		inventory_data = (userID, 100, 1, 1, 1, 1, 1, 1, 1)
 		database.add_inventory(inventory_data)
 
 		new_player = player.playerClass(database, userID)
