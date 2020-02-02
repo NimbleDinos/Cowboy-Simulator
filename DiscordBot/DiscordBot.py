@@ -172,14 +172,13 @@ async def buy(ctx, item, amount):
 		if person.player_id == userID:
 			if intown: # if player is in a town
 				didItWork = person.buyItem(item, amount) # this needs to be assigned to a player
+				print(didItWork)
 				if didItWork == 0:
 					await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
 				elif didItWork == 1:
 					await ctx.send("Trade successful partner! {0}".format(userName))
 				else:
 					await ctx.send("That was an invalid input {0}!".format(userName))
-			else:
-				await ctx.send("You're not in a Town Partner! {0}".format(userName))
 		else:
 			await ctx.send("You are not in the game! {0}".format(userName))
 

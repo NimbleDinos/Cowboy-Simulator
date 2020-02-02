@@ -134,6 +134,7 @@ class playerClass():
                     self.database.update_player_gun(self.player_id, gun_count + int_amount)
                 if item == "booze":
                     (booze_count,) = self.database.select_user_booze(self.player_id)[0]
+                    print("BOOZE {0}".format(booze_count))
                     self.database.update_player_booze(self.player_id, booze_count + int_amount)
                 if item == "hat":
                     (hat_count,) = self.database.select_user_hat(self.player_id)[0]
@@ -175,7 +176,7 @@ class playerClass():
                 if int_amount > booze_count:
                     return 1    # tell player cannot do this
                 else:
-                    self.database.update_player_gun(self.player_id, booze_count - int_amount)
+                    self.database.update_player_booze(self.player_id, booze_count - int_amount)
                     self.database.update_player_gold(self.player_id, sell_total + current_gold)
                     return 0    # tell player it done
             if item == "hat":
