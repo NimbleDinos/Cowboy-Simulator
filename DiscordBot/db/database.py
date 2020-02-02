@@ -107,3 +107,43 @@ class Database:
         cur.execute(db.sqlCommands.sql_update_player_status, (status, player_id))
         self.conn.commit()
 
+    def update_player_health(self, player_id, health):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_health, (health, player_id))
+        self.conn.commit()
+
+    def update_player_gold(self, player_id, gold):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_gold, (gold, player_id))
+        self.conn.commit()
+
+    def update_player_gun(self, player_id, gun):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_gun, (gun, player_id))
+        self.conn.commit()
+
+    def update_player_booze(self, player_id, booze):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_booze, (booze, player_id))
+        self.conn.commit()
+
+    def update_player_hat(self, player_id, hat):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_hat, (hat, player_id))
+        self.conn.commit()
+
+    def update_player_horse(self, player_id, horse):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_horse, (horse, player_id))
+        self.conn.commit()
+
+    def update_player_lasso(self, player_id, lasso):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_lasso, (lasso, player_id))
+        self.conn.commit()
+
+    def update_player_pickaxe(self, player_id, pickaxe):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_update_pickaxe, (pickaxe, player_id))
+        self.conn.commit()
+        
