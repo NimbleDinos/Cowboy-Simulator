@@ -17,3 +17,8 @@ sql_select_player_status = """SELECT status
 sql_update_player_status = """UPDATE players
                             SET status=?
                             WHERE id=?"""
+
+sql_select_active_player = """SELECT 1
+                            FROM players
+                            WHERE status=1
+                            AND id=?"""
