@@ -14,6 +14,7 @@ import APIMethods
 import logisticFunc
 
 import db
+import random
 
 locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range", "travelling"]
 
@@ -203,6 +204,29 @@ async def sell(ctx, item, amount):
 			break
 		# else:
 			# await ctx.send("You are not in the game! {0}".format(userName))
+
+@client.command()
+async def getInven(ctx):
+	user_id = ctx.message.author.id
+	user_name = ctx.message.author.name
+	player_exist = database.select_player_exists(user_id)
+	if len(player_exist) == 0:
+		await ctx.send("You need to join the first!")
+	else:
+		value = random.randint(0, 1000)
+		(_, health, gold, gun, booze, hat, horse, lasso, pickaxe) = database.select_user_inventory(user_id)[0]
+		message = ("--- Inventory for: {0} ---\n"
+				   "- Health: {1}\n"
+				   "- Gold: {2}\n"
+				   "- Hats: {3}\n" 
+				   "- Booze: {4}\n"
+				   "- Guns: {5}\n"
+				   "- Horses: {6}\n"
+				   "- Lassos: {7}\n"
+				   "- Pickaxes: {8}\n"
+				   "- Brain Cells: {9}").format(user_name, health, gold, hat, booze, gun, horse, lasso, pickaxe, value)
+		await ctx.send(message)
+
 
 @client.event
 async def on_message(message):
