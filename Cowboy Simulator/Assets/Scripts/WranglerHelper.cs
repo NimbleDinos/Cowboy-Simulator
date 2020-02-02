@@ -33,7 +33,7 @@ public class WranglerHelper : MonoBehaviour
 
     async Task<Join> GetJoin()
     {
-        var response = await new WWW("http://localhost:8081/getJoin");
+        var response = await new WWW("http://10.5.34.169:8081/getJoin");
         if (!string.IsNullOrEmpty(response.error))
         {
             throw new Exception();

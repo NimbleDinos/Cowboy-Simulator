@@ -151,60 +151,60 @@ public class PlayerGoToPlaceScript : MonoBehaviour
 
 }
 
-[CustomEditor(typeof(PlayerGoToPlaceScript))]
-public class CityGenButts : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-        {
+//[CustomEditor(typeof(PlayerGoToPlaceScript))]
+//public class CityGenButts : Editor
+//{
+//    public override void OnInspectorGUI()
+//    {
+//        base.OnInspectorGUI();
+//        {
 
-            PlayerGoToPlaceScript script = (PlayerGoToPlaceScript)target;
+//            PlayerGoToPlaceScript script = (PlayerGoToPlaceScript)target;
 
-            if(GUILayout.Button("Setup"))
-            {
-                script.Setup();
-            }
+//            if(GUILayout.Button("Setup"))
+//            {
+//                script.Setup();
+//            }
 
-            if (GUILayout.Button("GoTo Sheffield"))
-            {
-                script.Sheffield();
-            }
+//            if (GUILayout.Button("GoTo Sheffield"))
+//            {
+//                script.Sheffield();
+//            }
 
-            if (GUILayout.Button("GoTo Lincoln"))
-            {
-                script.Lincoln();
-            }
+//            if (GUILayout.Button("GoTo Lincoln"))
+//            {
+//                script.Lincoln();
+//            }
 
-            if (GUILayout.Button("GoTo Hull"))
-            {
-                script.Hull();
-            }
+//            if (GUILayout.Button("GoTo Hull"))
+//            {
+//                script.Hull();
+//            }
 
-            if (GUILayout.Button("GoTo Catch Horse"))
-            {
-                script.HorseCatch();
-            }
+//            if (GUILayout.Button("GoTo Catch Horse"))
+//            {
+//                script.HorseCatch();
+//            }
 
-            if (GUILayout.Button("GoTo Ride Horse"))
-            {
-                script.HorseRide();
-            }
+//            if (GUILayout.Button("GoTo Ride Horse"))
+//            {
+//                script.HorseRide();
+//            }
 
-            if (GUILayout.Button("GoTo Mine For Gold"))
-            {
-                script.Mine();
-            }
+//            if (GUILayout.Button("GoTo Mine For Gold"))
+//            {
+//                script.Mine();
+//            }
 
-            if (GUILayout.Button("GoTo Shoot"))
-            {
-                script.Shot();
-            }
+//            if (GUILayout.Button("GoTo Shoot"))
+//            {
+//                script.Shot();
+//            }
 
-            if(GUILayout.Button("GoTo River"))
-            {
-                script.River();
-            }
-        }
-    }
-}
+//            if(GUILayout.Button("GoTo River"))
+//            {
+//                script.River();
+//            }
+//        }
+//    }
+//}
