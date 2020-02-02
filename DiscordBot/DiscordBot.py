@@ -38,9 +38,6 @@ async def on_ready():
 
 	client.loop.create_task(update())
 
-	for x in active_player_list:
-		x.currentLocation = "plains"
-
 # Update loop
 async def update():
 	while True:
@@ -167,14 +164,32 @@ async def goto(ctx, location):
 
 # buy command
 @client.command()
-async def buy(ctx, item):
+async def buy(ctx, item, amount):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
 	
-	if 1 == 1: # if player is in a town
-		buyItem(item)
+	if True: # if player is in a town
+		didItWork = buyItem(item, amount) # this needs to be assigned to a player
+		if didItWork == 0:
+		    await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
+		else:
+			await ctx.send("Trade successful partner! {0}".format(userName))
 	else:
 		await ctx.send("You're not in a Town Partner! {0}".format(userName))
+
+@client.command()
+async def sell(ctx, item, amount):
+	userID = ctx.mesasge.author.id
+	userName = ctx.message.author.name
+
+	if True: # if player is in a town
+		didItWork = sellItem(item, amount) # this needs to be assigned to a player
+		if didItWork == 0:
+		    await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
+		else:
+			await ctx.send("Trade successful partner! {0}".format(userName))
+	else:
+		await ctx.send("You're not in a town partner! {0}".format(userName))
 
 @client.event
 async def on_message(message):
