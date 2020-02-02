@@ -10,7 +10,7 @@ class AbilityClass:
 		self.XP += 10
 		if self.XP > self.XPGoal:
 			self.updateXPGoal()
- 
+
 	def updateXPGoal(self):
 		self.XPGoal = self.XPGoal * 1.1
 		self.XP = 0

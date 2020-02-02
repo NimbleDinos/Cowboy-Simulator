@@ -8,7 +8,7 @@ from discord.ext import commands
 import player
 import ability
 import APIMethods
-from player import locationList
+import logisticFunc
 
 import db
 
