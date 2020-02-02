@@ -8,6 +8,7 @@ from discord.ext import commands
 import player
 import ability
 import APIMethods
+import logisticFunc
 
 import db
 

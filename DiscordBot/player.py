@@ -1,5 +1,9 @@
+# Discord Imports
 import ability
 import random
+
+# Other File Imports
+import logisticFunc
 
 locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range"]
 
@@ -59,7 +63,8 @@ class playerClass():
         print("XP:" +str(self.Mining.XP))
 
     def mineAction(self):
-        ChanceToFindGold = 0.1 # Replace with maths to calculate chance
+        ChanceToFindGold = logisticFunc.logistic_func(self.Mining.level)
+        print(ChanceToFindGold)
 
     # stops health going above 100
     def healthCap(self):
