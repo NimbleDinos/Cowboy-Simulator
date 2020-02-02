@@ -22,11 +22,12 @@ client = commands.Bot(command_prefix=bot_prefix)
 client.remove_command("help")
 
 # global variables
-playerList = []
+active_player_list = []
 
 database_loc = r"./db/database.sql"
 database = db.database.Database(database_loc)
 database.create_player_table()
+database.create_inventory_table()
 
 # bot startup messages
 @client.event
@@ -40,34 +41,38 @@ async def on_ready():
 # Update loop
 async def update():
 	while True:
-		for person in playerList:
-
+		for person in active_player_list:
+			location_obj = database.select_player_place(person.player_id)
+			test = database.select_user_gold(person.player_id)
+			print("GOLD {0}".format(test))
+			print(location_obj)
+			(loc,) = location_obj[0]
 			# do thing based on location
-			if person.currentLocation == "travelling":
-				inTown = False
-			if person.currentLocation == "hull":
-				inTown = True
+			if loc == "travelling":
+				database.update_player_intown(person.player_id, True)
+			if loc == "hull":
+				database.update_player_intown(person.player_id, True)
 				person.hatAction()
-			if person.currentLocation == "lincoln":
-				inTown = True
+			if loc == "lincoln":
+				database.update_player_intown(person.player_id, True)
 				person.hatAction()
-			if person.currentLocation == "sheffield":
-				inTown = True
+			if loc == "sheffield":
+				database.update_player_intown(person.player_id, True)
 				person.hatAction()
-			if person.currentLocation == "corral":
-				inTown = False
+			if loc == "corral":
+				database.update_player_intown(person.player_id, False)
 				person.ridingAction()
-			if person.currentLocation == "gold-mine":
-				inTown = False
+			if loc == "gold-mine":
+				database.update_player_intown(person.player_id, False)
 				person.mineAction()
-			if person.currentLocation == "plains":
-				inTown = False
+			if loc == "plains":
+				database.update_player_intown(person.player_id, False)
 				person.catchAction()
-			if person.currentLocation == "river":
-				inTown = False
+			if loc == "river":
+				database.update_player_intown(person.player_id, False)
 				person.panAction()
-			if person.currentLocation == "shooting-range":
-				inTown = False
+			if loc == "shooting-range":
+				database.update_player_intown(person.player_id, False)
 				person.shootingAction()
 			
 			# update health
@@ -95,22 +100,24 @@ async def join(ctx):
 
 	player_exist = database.select_player_exists(userID)
 	# print(player_exist)
-	print("in command")
 
 	if (len(player_exist)) == 0:
-		player_data = (userID, 1)
+		player_data = (userID, 1, "town", True)
 		database.add_player(player_data)
-		newPlayer = player.playerClass()
-		newPlayer.id = userID
-		playerList.append(newPlayer)
+		inventory_data = (userID, 100, 1, 1, 1, 1, 1, 1, 1)
+		database.add_inventory(inventory_data)
+
+		new_player = player.playerClass(database, userID)
+		active_player_list.append(new_player)
 		api_message = APIMethods.join_game_request(userID, userName)
 		await ctx.send(api_message)
 	else:
 		player_status = database.select_player_status(userID)
-		print(player_status[0])
 		if player_status[0] == (0,):
 			database.update_player_status(userID, 1)
 			api_message = APIMethods.join_game_request(userID, userName)
+			new_player = player.playerClass(database, userID)
+			active_player_list.append(new_player)
 			await ctx.send(api_message)
 		else:
 			await ctx.send("You are already in the game " + userName + "!")
@@ -139,16 +146,19 @@ async def goto(ctx, location):
 	userName = ctx.message.author.name
 
 	player_status = database.select_active_players(userID)
-	print(player_status)
+	# print(player_status)
+	loc = location.lower()
 	if player_status[0] == (1,):
-		if location.lower() in locationList:
+		if loc in locationList:
 			# TODO: update db with new loc
+			print(loc)
+			database.update_player_place(userID, loc)
 			#TODO: do thing to get time here
 			time = 30
-			api_message = APIMethods.move_to_request(userID, location.lower(), time)
+			api_message = APIMethods.move_to_request(userID, loc, time)
 			await ctx.send(api_message)
 		else:
-			await ctx.send("Sorry but {0} isn't a valid place".format(location.lower()))
+			await ctx.send("Sorry but {0} isn't a valid place".format(location))
 	else:
 		await ctx.send("You aren't in the game yet, {0}".format(userName))
 

@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class PlayerGoToPlaceScript : MonoBehaviour
 {
-    public GameObject objHull, objMine, objSheffield, objLincoln, objhorseRide, objHorseCatch, objShot;
+    public GameObject objHull, objMine, objSheffield, objLincoln, objhorseRide, objHorseCatch, objShot, objRiver;
     Transform TargObj;
     Vector3 Target;
     public string name;
@@ -13,6 +13,9 @@ public class PlayerGoToPlaceScript : MonoBehaviour
     public float tim = 10, timer = 0;
 
     GameObject[] Places;
+
+    public Color jeff;
+    public int r, g, b;
 
     // Start is called before the first frame update
     public void Setup()
@@ -47,10 +50,16 @@ public class PlayerGoToPlaceScript : MonoBehaviour
                 case "Shot":
                     objShot = Places[i];
                     break;
+                case "River":
+                    objRiver = Places[i];
+                    break;
             }
         }
 
         Hull();
+
+
+        this.GetComponent<SpriteRenderer>().color = new Color32((byte)Random.Range(0, 256), (byte)Random.Range(0, 256), (byte)Random.Range(0, 256),  255);
 
     }
 
@@ -136,6 +145,12 @@ public class PlayerGoToPlaceScript : MonoBehaviour
         Target = TargObj.position;
     }
 
+    public void River()
+    {
+        TargObj = objRiver.transform;
+        Target = TargObj.position;
+    }
+
 }
 
 [CustomEditor(typeof(PlayerGoToPlaceScript))]
@@ -186,6 +201,11 @@ public class CityGenButts : Editor
             if (GUILayout.Button("GoTo Shoot"))
             {
                 script.Shot();
+            }
+
+            if(GUILayout.Button("GoTo River"))
+            {
+                script.River();
             }
         }
     }

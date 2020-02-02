@@ -1,21 +1,23 @@
-
 # Other File Imports
 import logisticFunc
 import ability
 import random
 
-locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range", "travelling"]
+locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range",
+                "travelling"]
 
 # item order gun, booze, hat, horse, lasso, pickaxe
 itemPrices = [30, 2, 5, 50, 4, 8]
 
+
 def playerTest():
     print("playerTest")
 
+
 class playerClass():
-    id = 0
-    currentLocation = "town"
-    inTown = False
+    def __init__(self, database, player_id):
+        self.database = database
+        self.player_id = player_id
 
     # abilities
     Shooting = ability.AbilityClass()
@@ -24,22 +26,15 @@ class playerClass():
     Catching = ability.AbilityClass()
     Mining = ability.AbilityClass()
 
-    # inventory
-    health = 100
-    gold = 0
-    gun = 0
-    booze = 0
-    hat = 0
-    horse = 0
-    lasso = 0
-    pickaxe = 0
-    
     def panAction(self):
-        chanceToFindGold = 0.1 # Don't replace this one
+        chanceToFindGold = 0.1  # Don't replace this one
         randomNumber = random.uniform(0, 1)
         if chanceToFindGold > randomNumber:
-            self.gold += 1
-        
+            curr_gold_thing = self.database.select_user_gold(self.player_id)
+            (curr_gold,) = curr_gold_thing[0]
+            # print(curr_gold)
+            self.database.update_player_gold(self.player_id, curr_gold + 1)
+
         # random generator to pick ability to level up
         randomAbility = random.randint(0, 4)
         if randomAbility == 0:
@@ -54,47 +49,60 @@ class playerClass():
             self.Mining.updateXP()
 
     def mineAction(self):
-        if self.pickaxe > 0:
+        (pickaxe_count,) = self.database.select_user_pickaxe(self.player_id)[0]
+        print(pickaxe_count)
+        if pickaxe_count > 0:
             chanceToFindGold = logisticFunc.logistic_func(self.Mining.level)
             randomNumber = random.uniform(0, 1)
             if chanceToFindGold > randomNumber:
-                self.gold += 3
-            self.pickaxe -= 1
+                curr_gold_thing = self.database.select_user_gold(self.player_id)
+                (curr_gold,) = curr_gold_thing[0]
+                # print(curr_gold)
+                self.database.update_player_gold(self.player_id, curr_gold + 1)
+            self.database.update_player_place(self.player_id, pickaxe_count - 1)
             self.Mining.updateXP()
 
     def ridingAction(self):
-        if self.horse > 0:
-            self.horse -= 1;
+        (horse_count,) = self.database.select_user_horse(self.player_id)[0]
+        if horse_count > 0:
+            self.database.update_player_horse(self.player_id, horse_count - 1)
             self.Riding.updateXP()
 
     def shootingAction(self):
-        if self.gun > 0 and self.health > 1:
-            self.gun -= 1
+        (gun_count,) = self.database.select_user_gun(self.player_id)[0]
+        (health,) = self.database.select_user_health(self.player_id)[0]
+        if gun_count > 0 and health > 1:
+            self.database.update_player_gun(self.player_id, gun_count - 1)
             self.Shooting.updateXP()
-            
+
             chanceToBeShot = logisticFunc.logistic_func(self.Shooting.level)
             randomNumber = random.uniform(0, 1)
             if chanceToBeShot < randomNumber:
-                self.health -= 1
+                self.database.update_player_health(self.player_id, health - 1)
 
     def healAction(self):
-        if self.health < 100 and self.booze > 0:
-            self.health += 4
-            self.booze -= 1
-            healthCap()
+        (health,) = self.database.select_user_health(self.player_id)[0]
+        (booze_count) = self.database.select_user_booze(self.player_id)[0]
+        if health < 100 and booze_count > 0:
+            new_health = health + 4 if health + 4 < 100 else 100
+            self.database.update_player_health(self.player_id, new_health)
+            self.database.update_player_booze(self.player_id, booze_count - 1)
 
     def hatAction(self):
-        if self.hat > 0:
-            self.hat -= 1
+        (hats,) = self.database.select_user_hat(self.player_id)[0]
+        if hats > 0:
+            self.database.update_player_hat(self.player_id, hats - 1)
             self.Hattitude.updateXP()
 
     def catchAction(self):
-        if self.lasso > 0:
+        (lasso_count) = self.database.select_user_lasso(self.player_id)[0]
+        if lasso_count > 0:
             chanceToFindHorse = logisticFunc.logistic_func(self.Catching.level)
             randomNumber = random.uniform(0, 1)
             if chanceToFindHorse > randomNumber:
-                self.horse += 1
-            self.lasso -= 1
+                (horse_count,) = self.database.select_user_horse(self.player_id)[0]
+                self.database.update_player_horse(self.player_id, horse_count + 1)
+            self.database.update_player_lasso(self.player_id, lasso_count - 1)
             self.Catching.updateXP()
 
     # buy item
