@@ -99,24 +99,92 @@ class playerClass():
 
     # buy item
     def buyItem(item, amount):
-        itemValue = 0
+        goldAmount = 0
 
         if item == "gun":
-            itemValue = itemPrices[0]
+            goldAmount = itemPrices[0] * amount
         if item == "booze":
-            itemValue = itemPrices[1]
+            goldAmount = itemPrices[1] * amount
         if item == "hat":
-            itemValue = itemPrices[2]
+            goldAmount = itemPrices[2] * amount
         if item == "horse":
-            itemValue = itemPrices[3]
+            goldAmount = itemPrices[3] * amount
         if item == "lasso":
-            itemValue = itemPrices[4]
+            goldAmount = itemPrices[4] * amount
         if item == "pickaxe":
-            itemValue = itemPrices[5]
+            goldAmount = itemPrices[5] * amount
+        
+        if goldAmount - self.gold < 0:
+            return 0 # tell player cannot do this
+        else:
+            self.gold -= goldAmount
+            if item == "gun":
+                self.gun += amount
+            if item == "booze":
+                self.booze += amount
+            if item == "hat":
+                self.hat += amount
+            if item == "horse":
+                self.horse += amount
+            if item == "lasso":
+                self.lasso += amount
+            if item == "pickaxe":
+                self.pickaxe += amount
+            
+            return 1 # tell player can do this and that it happened
 
     # sell item
     def sellItem(item, amount):
-        pass
+        goldAmount = 0
+
+        if item == "gun":
+            goldAmount = itemPrices[0] * amount
+            if amount > self.gun:
+                return 1 # tell player cannot do this
+            else:
+                self.gun -= amount
+                self.gold += goldAmount
+                return 0 # tell player it done
+        if item == "booze":
+            goldAmount = itemPrices[1] * amount
+            if amount > self.booze:
+                return 1 # tell player cannot do this
+            else:
+                self.booze -= amount
+                self.gold += goldAmount
+                return 0 # tell player it done
+        if item == "hat":
+            goldAmount = itemPrices[2] * amount
+            if amount > self.hat:
+                return 1 # tell player cannot do this
+            else:
+                self.hat -= amount
+                self.gold += goldAmount
+                return 0 # tell player it done
+        if item == "horse":
+            goldAmount = itemPrices[3] * amount
+            if amount > self.horse:
+                return 1 # tell player cannot do this
+            else:
+                self.horse -= amount
+                self.gold += goldAmount
+                return 0 # tell player it done
+        if item == "lasso":
+            goldAmount = itemPrices[4] * amount
+            if amount > self.lasso:
+                return 1 # tell player cannot do this
+            else:
+                self.lasso -= amount
+                self.gold += goldAmount
+                return 0 # tell player it done
+        if item == "pickaxe":
+            goldAmount = itemPrices[5] * amount
+            if amount > self.pickaxe:
+                return 1 # tell player cannot do this
+            else:
+                self.pickaxe -= amount
+                self.gold += goldAmount
+                return 0 # tell player it done
 
     # stops health going above 100
     def healthCap(self):
