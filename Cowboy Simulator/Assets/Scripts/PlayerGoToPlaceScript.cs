@@ -14,8 +14,6 @@ public class PlayerGoToPlaceScript : MonoBehaviour
 
     GameObject[] Places;
 
-    public Color jeff;
-    public int r, g, b;
 
     // Start is called before the first frame update
     public void Setup()

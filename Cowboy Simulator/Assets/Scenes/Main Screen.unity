@@ -556,17 +556,27 @@ PrefabInstance:
     - target: {fileID: 4126782850054102010, guid: ce195bb1d70d84ed1ace6696c12ea1aa,
         type: 3}
       propertyPath: m_Color.r
-      value: 0.35686275
+      value: 0.77254903
       objectReference: {fileID: 0}
     - target: {fileID: 4126782850054102010, guid: ce195bb1d70d84ed1ace6696c12ea1aa,
         type: 3}
       propertyPath: m_Color.g
-      value: 0.91764706
+      value: 0.75686276
       objectReference: {fileID: 0}
     - target: {fileID: 4126782850054102010, guid: ce195bb1d70d84ed1ace6696c12ea1aa,
         type: 3}
       propertyPath: m_Color.b
-      value: 0.8862745
+      value: 0.70980394
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126782850054102012, guid: ce195bb1d70d84ed1ace6696c12ea1aa,
+        type: 3}
+      propertyPath: name
+      value: Lottie
+      objectReference: {fileID: 0}
+    - target: {fileID: 4126782849551679297, guid: ce195bb1d70d84ed1ace6696c12ea1aa,
+        type: 3}
+      propertyPath: m_Text
+      value: Lottie
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce195bb1d70d84ed1ace6696c12ea1aa, type: 3}
