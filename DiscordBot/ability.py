@@ -1,5 +1,3 @@
-def abilityTest():
-	print("abilityTest")
 
 class AbilityClass:
 	level = 1
