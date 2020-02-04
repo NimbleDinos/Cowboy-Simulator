@@ -47,7 +47,7 @@ async def update():
 		print(active_player_list)
 		for person in active_player_list:
 			(loc,) = database.select_player_place(person.player_id)[0]
-			test = database.select_user_gold(person.player_id)
+			# test = database.select_user_gold(person.player_id)
 			print("GOLD {0}".format(test))
 			# do thing based on location
 			if loc == "travelling":
