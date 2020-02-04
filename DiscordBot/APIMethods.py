@@ -1,6 +1,9 @@
 import requests
 
+# use this for testing
 baseUrl = "http://localhost:8081/"
+# TODO update as ip changes
+# baseUrl = "http://10.5.34.169:8081/"
 
 
 def join_game_request(user_id, user_name):

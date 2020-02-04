@@ -106,7 +106,7 @@ async def join(ctx):
 	if (len(player_exist)) == 0:
 		player_data = (userID, 1, "town", True)
 		database.add_player(player_data)
-		inventory_data = (userID, 100, 100, 100, 100, 100, 100, 100, 100)
+		inventory_data = (userID, 100, 10, 0, 0, 0, 0, 0, 0)
 		database.add_inventory(inventory_data)
 
 		new_player = player.playerClass(database, userID)
