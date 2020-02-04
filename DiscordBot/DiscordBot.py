@@ -140,6 +140,10 @@ async def leave(ctx):
 		else:
 			database.update_player_status(user_id, 0)
 			APIMethods.join_game_request(user_id, user_name)
+			for person in active_player_list:
+				if person.player_id == user_id:
+					active_player_list.remove(person)
+					break
 			await ctx.send("See you soon " + user_name +"!")
 
 # go to command
