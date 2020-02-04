@@ -7,7 +7,8 @@ class Database:
     def __init__(self, db_location):
         self.conn = self.create_connection(db_location)
 
-    def create_connection(self, db_file):
+    @staticmethod
+    def create_connection(db_file):
         conn = None
         try:
             conn = sqlite3.connect(db_file)
