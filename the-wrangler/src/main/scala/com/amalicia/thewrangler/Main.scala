@@ -17,7 +17,7 @@ object Main extends App {
 
   case class Message(hello: String)
 
-  val joinQueue = scala.collection.mutable.Queue[JoinGame]()
+  val joinList = ListBuffer[JoinGame]()
 
   val playerMoveList = new ListBuffer[MovePlayer]()
 
@@ -26,13 +26,14 @@ object Main extends App {
   }
 
   def join: Endpoint[IO, String] = get("join" :: param[Long]("userId") :: param[String]("userName")) { (userId: Long, userName: String) ⇒
-    joinQueue.enqueue(JoinGame(userId, userName))
+    joinList += JoinGame(userId, userName)
     Ok(s"Player ID: $userId added to Join Queue")
   }
 
   def getJoin: Endpoint[IO, Json] = get("getJoin") {
-    if (joinQueue.isEmpty) Ok(JoinGame(-1, "").asJson)
-    else Ok(joinQueue.dequeue().asJson)
+    val joins = joinList.toList
+    joinList --= joins
+    Ok(joins.asJson)
   }
 
   def movePlayer: Endpoint[IO, String] =
