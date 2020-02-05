@@ -51,7 +51,7 @@ async def update():
 			print("GOLD {0}".format(test))
 			# do thing based on location
 			if loc == "travelling":
-				database.update_player_intown(person.player_id, True)
+				database.update_player_intown(person.player_id, False)
 			if loc == "hull":
 				database.update_player_intown(person.player_id, True)
 				person.hatAction()
@@ -156,20 +156,20 @@ async def goto(ctx, location):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
 
-	player_status = database.select_active_players(userID)
 	# print(player_status)
 	loc = location.lower()
-	if player_status[0] == (1,):
-		if loc in locationList:
+	if loc in locationList:
+		player_status = database.select_active_players(userID)
+		if player_status[0] == (1,):
 			database.update_player_place(userID, loc)
 			# TODO: do thing to get time here
 			time = 30
 			api_message = APIMethods.move_to_request(userID, loc, time)
 			await ctx.send(api_message)
 		else:
-			await ctx.send("Sorry but {0} isn't a valid place".format(location))
+			await ctx.send("You aren't in the game yet, {0}".format(userName))
 	else:
-		await ctx.send("You aren't in the game yet, {0}".format(userName))
+		await ctx.send("Sorry but {0} isn't a valid place".format(location))
 
 
 # buy command
@@ -178,11 +178,12 @@ async def buy(ctx, item, amount):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
 
-	(intown,) = database.select_player_intwon(userID)[0]
+
 	for person in active_player_list:
 		if person.player_id == userID:
+			(intown,) = database.select_player_intwon(userID)[0]
 			if intown:  # if player is in a town
-				didItWork = person.buyItem(item, amount)  # this needs to be assigned to a player
+				didItWork = person.buyItem(item, amount)
 				print(didItWork)
 				if didItWork == 0:
 					await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
@@ -190,6 +191,7 @@ async def buy(ctx, item, amount):
 					await ctx.send("Trade successful partner! {0}".format(userName))
 				else:
 					await ctx.send("That was an invalid input {0}!".format(userName))
+			break
 		else:
 			await ctx.send("You are not in the game! {0}".format(userName))
 
@@ -199,9 +201,9 @@ async def sell(ctx, item, amount):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
 
-	(intown,) = database.select_player_intwon(userID)[0]
 	for person in active_player_list:
 		if person.player_id == userID:
+			(intown,) = database.select_player_intwon(userID)[0]
 			if intown:  # if player is in a town
 				didItWork = person.sellItem(item, amount)  # this needs to be assigned to a player
 				if didItWork == 1:
@@ -212,7 +214,7 @@ async def sell(ctx, item, amount):
 					await ctx.senf("That was an invalid input {0}!".format(userName))
 			else:
 				await ctx.send("You're not in a town partner! {0}".format(userName))
-			break
+		break
 
 
 # else:
