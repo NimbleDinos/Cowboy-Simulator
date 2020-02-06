@@ -17,6 +17,7 @@ public class WranglerHelper : MonoBehaviour
         {
             Debug.Log(join.playerId);
             GetComponent<Bob>().CreatePlayer(join);
+
         }
 
         var moveList = await GetMovement();
@@ -26,9 +27,12 @@ public class WranglerHelper : MonoBehaviour
             foreach (var item in moveList)
             {
                 GetComponent<Bob>().MovePlayer(item);
+
             }
         }
 
+        this.GetComponent<WranglerHelper>().enabled = false;
+        
     }
 
     async Task<Join> GetJoin()

@@ -6,6 +6,23 @@ public class Bob : MonoBehaviour
 {
     public GameObject playerPrefab;
     public List< GameObject > Players;
+    public float time = 0, callInterval = 0;
+
+    private void Update()
+    {
+        time += Time.deltaTime;
+
+        if (time >= callInterval)
+        {
+            time = 0;
+
+            this.GetComponent<WranglerHelper>().enabled = true;
+            Debug.Log("Call Update");
+        }
+
+    }
+
+
     public void MovePlayer(Movement data)
     {
         foreach (var item in Players)
