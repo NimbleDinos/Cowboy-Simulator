@@ -29,9 +29,8 @@ class PlayerClass:
 		chanceToFindGold = 0.1  # Don't replace this one
 		randomNumber = random.uniform(0, 1)
 		if chanceToFindGold > randomNumber:
-			(curr_gold,) = self.database.select_user_gold(self.player_id)[0]
-			# print(curr_gold)
-			self.database.update_player_gold(self.player_id, curr_gold + 1)
+			(curr_gold,) = self.database.select_user_item("gold", self.player_id)[0]
+			self.database.update_player_item("gold", curr_gold + 1, self.player_id)
 
 		# random generator to pick ability to level up
 		randomAbility = random.randint(0, 4)
@@ -55,51 +54,51 @@ class PlayerClass:
 				return 0
 
 	def mineAction(self):
-		(pickaxe_count,) = self.database.select_user_pickaxe(self.player_id)[0]
+		(pickaxe_count,) = self.database.select_user_item("pickaxe", self.player_id)[0]
 		if self.action(pickaxe_count, logisticFunc.logistic_func(self.Mining.level)) == 1:
-			(curr_gold,) = self.database.select_user_gold(self.player_id)[0]
-			self.database.update_player_gold(self.player_id, curr_gold + 1)
-		self.database.update_player_pickaxe(self.player_id, pickaxe_count - 1)
+			(curr_gold,) = self.database.select_user_item("gold", self.player_id)[0]
+			self.database.update_player_item("gold", curr_gold + 1, self.player_id)
+		self.database.update_player_item("pickaxe",  pickaxe_count - 1, self.player_id)
 		self.Mining.updateXP()
 
 	def ridingAction(self):
-		(horse_count,) = self.database.select_user_horse(self.player_id)[0]
+		(horse_count,) = self.database.select_user_item("horse", self.player_id)[0]
 		if horse_count > 0:
-			self.database.update_player_horse(self.player_id, horse_count - 1)
+			self.database.update_player_item("horse", horse_count - 1, self.player_id)
 			self.Riding.updateXP()
 
 	def shootingAction(self):
-		(gun_count,) = self.database.select_user_gun(self.player_id)[0]
-		(health,) = self.database.select_user_health(self.player_id)[0]
+		(gun_count,) = self.database.select_user_item("gun", self.player_id)[0]
+		(health,) = self.database.select_user_item("health", self.player_id)[0]
 		if gun_count > 0 and health > 1:
-			self.database.update_player_gun(self.player_id, gun_count - 1)
+			self.database.update_player_item("gun", gun_count - 1, self.player_id)
 			self.Shooting.updateXP()
 
 			chanceToBeShot = logisticFunc.logistic_func(self.Shooting.level)
 			randomNumber = random.uniform(0, 1)
 			if chanceToBeShot < randomNumber:
-				self.database.update_player_health(self.player_id, health - 1)
+				self.database.update_player_item("health", health - 1, self.player_id)
 
 	def healAction(self):
-		(health,) = self.database.select_user_health(self.player_id)[0]
-		(booze_count) = self.database.select_user_booze(self.player_id)[0]
+		(health,) = self.database.select_user_item("health", self.player_id)[0]
+		(booze_count) = self.database.select_user_item("booze", self.player_id)[0]
 		if health < 100 and booze_count > 0:
 			new_health = health + 4 if health + 4 < 100 else 100
-			self.database.update_player_health(self.player_id, new_health)
-			self.database.update_player_booze(self.player_id, booze_count - 1)
+			self.database.update_player_item("health", new_health, self.player_id)
+			self.database.update_player_item("booze", booze_count - 1, self.player_id)
 
 	def hatAction(self):
-		(hats,) = self.database.select_user_hat(self.player_id)[0]
+		(hats,) = self.database.select_user_item("hat", self.player_id)[0]
 		if hats > 0:
-			self.database.update_player_hat(self.player_id, hats - 1)
+			self.database.update_player_item("hat", hats - 1, self.player_id)
 			self.Hattitude.updateXP()
 
 	def catchAction(self):
-		(lasso_count,) = self.database.select_user_lasso(self.player_id)[0]
+		(lasso_count,) = self.database.select_user_item("lasso", self.player_id)[0]
 		if self.action(lasso_count, logisticFunc.logistic_func(self.Catching.level)) == 1:
-			(horse_count,) = self.database.select_user_horse(self.player_id)[0]
-			self.database.update_player_horse(self.player_id, horse_count + 1)
-		self.database.update_player_lasso(self.player_id, lasso_count - 1)
+			(horse_count,) = self.database.select_user_item("horse", self.player_id)[0]
+			self.database.update_player_item("horse", horse_count + 1, self.player_id)
+		self.database.update_player_item("lasso", lasso_count - 1, self.player_id)
 		self.Catching.updateXP()
 
 	def _buy_item(self, item, int_amount):
