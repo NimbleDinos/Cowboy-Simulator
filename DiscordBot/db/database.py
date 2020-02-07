@@ -133,6 +133,12 @@ class Database:
         rows = cur.fetchall()
         return rows
 
+    def select_user_item(self, item, player_id):
+        cur = self.conn.cursor()
+        cur.execute("SELECT {0} FROM inventory WHERE id={1}".format(item, player_id))
+        rows = cur.fetchall()
+        return rows
+
     def update_all_player_status(self):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_update_all_player_status, ())
@@ -192,3 +198,9 @@ class Database:
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_update_pickaxe, (pickaxe, player_id))
         self.conn.commit()
+
+    def update_player_item(self, item, amount, player_id):
+        cur = self.conn.cursor()
+        cur.execute("UPDATE inventory SET {0} = {1} WHERE id={2}".format(item, amount, player_id))
+        rows = cur.fetchall()
+        return rows

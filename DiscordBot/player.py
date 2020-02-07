@@ -102,6 +102,22 @@ class PlayerClass:
 		self.database.update_player_lasso(self.player_id, lasso_count - 1)
 		self.Catching.updateXP()
 
+	def _buy_item(self, item, int_amount):
+		print("enter new buy")
+		(current_gold,) = self.database.select_user_item("gold", self.player_id)[0]
+		cost = item_dict.get(item) * int_amount
+		print(current_gold)
+
+		if current_gold - cost < 0:
+			return 1
+		else:
+			print("in else")
+			self.database.update_player_item("gold", current_gold - cost, self.player_id)
+			(item_count,) = self.database.select_user_item(item, self.player_id)[0]
+			print(item_count)
+			self.database.update_player_item(item, item_count + int_amount, self.player_id)
+			return 0
+
 	# buy item
 	def buyItem(self, item, amount):
 		try:
@@ -111,33 +127,7 @@ class PlayerClass:
 			if lower_item not in item_dict:
 				return 4
 
-			(current_gold,) = self.database.select_user_gold(self.player_id)[0]
-			cost = item_dict.get(lower_item) * int_amount
-
-			if current_gold - cost < 0:
-				return 1  # tell player cannot do this
-			else:
-				self.database.update_player_gold(self.player_id, current_gold - cost)
-				if lower_item == "gun":
-					(gun_count,) = self.database.select_user_gun(self.player_id)[0]
-					self.database.update_player_gun(self.player_id, gun_count + int_amount)
-				if lower_item == "booze":
-					(booze_count,) = self.database.select_user_booze(self.player_id)[0]
-					print("BOOZE {0}".format(booze_count))
-					self.database.update_player_booze(self.player_id, booze_count + int_amount)
-				if lower_item == "hat":
-					(hat_count,) = self.database.select_user_hat(self.player_id)[0]
-					self.database.update_player_hat(self.player_id, hat_count + int_amount)
-				if lower_item == "horse":
-					(horse_count,) = self.database.select_user_horse(self.player_id)[0]
-					self.database.update_player_horse(self.player_id, horse_count + int_amount)
-				if lower_item == "lasso":
-					(lasso_count,) = self.database.select_user_lasso(self.player_id)[0]
-					self.database.update_player_lasso(self.player_id, lasso_count + int_amount)
-				if lower_item == "pickaxe":
-					(pickaxe_count,) = self.database.select_user_pickaxe(self.player_id)[0]
-					self.database.update_player_pickaxe(self.player_id, pickaxe_count + int_amount)
-				return 0  # tell player can do this and that it happened
+			return self._buy_item(lower_item, int_amount)
 		except ValueError:
 			return 3
 

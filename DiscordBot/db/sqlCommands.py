@@ -25,7 +25,6 @@ sql_insert_player = """INSERT INTO players(id, status, place, intown)
 sql_insert_inventory = """INSERT INTO inventory(id, health, gold, gun, booze, hat, horse, lasso, pickaxe)
                         VALUES(?, ?, ?, ?, ?, ? ,? ,?, ?) """
 
-
 # ---- SELECT STATEMENTS ----
 sql_select_player_exists = """SELECT 1 
                             FROM players
@@ -92,6 +91,10 @@ sql_select_pickaxe = """SELECT pickaxe
                     FROM inventory
                     WHERE id=?
                     """
+
+sql_select_option = """SELECT ?
+					FROM inventory
+					WHERE id=?"""
 
 # ---- UPDATE STATEMENTS ----
 

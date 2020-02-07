@@ -17,6 +17,8 @@ import random
 locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range",
                 "travelling"]
 
+item_list = ["health", "gold", "gun", "booze", "hat", "horse", "lasso", "pickaxe"]
+
 bot_prefix = "!"
 client = commands.Bot(command_prefix=bot_prefix)
 client.remove_command("help")
@@ -185,9 +187,9 @@ async def buy(ctx, item, amount):
 			if intown:  # if player is in a town
 				didItWork = person.buyItem(item, amount)
 				print(didItWork)
-				if didItWork == 0:
+				if didItWork == 1:
 					await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
-				elif didItWork == 1:
+				elif didItWork == 0:
 					await ctx.send("Trade successful partner! {0}".format(userName))
 				else:
 					await ctx.send("That was an invalid input {0}!".format(userName))
@@ -242,6 +244,18 @@ async def getInven(ctx):
 		           "- Pickaxes: {8}\n"
 		           "- Brain Cells: {9}").format(user_name, health, gold, hat, booze, gun, horse, lasso, pickaxe, value)
 		await ctx.send(message)
+
+@client.command()
+async def test_db(ctx, item):
+	user_id = ctx.message.author.id
+	_item = item.lower()
+
+	if _item in item_list:
+		(item,) = database.select_user_item(_item, user_id)[0]
+		print(item)
+		await ctx.send("You have {0} {1}'s".format(item, _item))
+	else:
+		await ctx.send("That ain't a thing")
 
 
 @client.event
