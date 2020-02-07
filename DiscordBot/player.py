@@ -103,7 +103,6 @@ class PlayerClass:
 		self.Catching.updateXP()
 
 	def _buy_item(self, item, int_amount):
-		print("enter new buy")
 		(current_gold,) = self.database.select_user_item("gold", self.player_id)[0]
 		cost = item_dict.get(item) * int_amount
 		print(current_gold)
@@ -111,10 +110,8 @@ class PlayerClass:
 		if current_gold - cost < 0:
 			return 1
 		else:
-			print("in else")
 			self.database.update_player_item("gold", current_gold - cost, self.player_id)
 			(item_count,) = self.database.select_user_item(item, self.player_id)[0]
-			print(item_count)
 			self.database.update_player_item(item, item_count + int_amount, self.player_id)
 			return 0
 
@@ -131,65 +128,28 @@ class PlayerClass:
 		except ValueError:
 			return 3
 
+	def _sell_item(self, item, int_amount):
+		(current_gold,) = self.database.select_user_item("gold", self.player_id)[0]
+		sell_total = item_dict.get(item) * int_amount
+
+		(item_count,) = self.database.select_user_item(item, self.player_id)[0]
+		if item_count < int_amount:
+			return 1
+		else:
+			self.database.update_player_item("gold", current_gold + sell_total, self.player_id)
+			self.database.update_player_item(item, item_count - int_amount, self.player_id)
+			return 0
+
+
 	# sell item
 	def sellItem(self, item, amount):
 		try:
 			int_amount = int(amount)
 			lower_item = item.lower()
-			(current_gold,) = self.database.select_user_gold(self.player_id)[0]
 
 			if lower_item not in item_dict:
 				return 4
 
-			sell_total = item_dict.get(lower_item)
-
-			if item == "gun":
-				(gun_count,) = self.database.select_user_gun(self.player_id)[0]
-				if int_amount > gun_count:
-					return 1    # tell player cannot do this
-				else:
-					self.database.update_player_gun(self.player_id, gun_count - int_amount)
-					self.database.update_player_gold(self.player_id, sell_total + current_gold)
-					return 0    # tell player it done
-			if item == "booze":
-				(booze_count,) = self.database.select_user_booze(self.player_id)[0]
-				if int_amount > booze_count:
-					return 1    # tell player cannot do this
-				else:
-					self.database.update_player_booze(self.player_id, booze_count - int_amount)
-					self.database.update_player_gold(self.player_id, sell_total + current_gold)
-					return 0    # tell player it done
-			if item == "hat":
-				(hat_count,) = self.database.select_user_hat(self.player_id)[0]
-				if int_amount > hat_count:
-					return 1    # tell player cannot do this
-				else:
-					self.database.update_player_hat(self.player_id, hat_count - int_amount)
-					self.database.update_player_gold(self.player_id, sell_total + current_gold)
-					return 0    # tell player it done
-			if item == "horse":
-				(horse_count,) = self.database.select_user_horse(self.player_id)[0]
-				if int_amount > horse_count:
-					return 1    # tell player cannot do this
-				else:
-					self.database.update_player_horse(self.player_id, horse_count - int_amount)
-					self.database.update_player_gold(self.player_id, sell_total + current_gold)
-					return 0    # tell player it done
-			if item == "lasso":
-				(lass_count,) = self.database.select_user_lasso(self.player_id)[0]
-				if int_amount > lass_count:
-					return 1    # tell player cannot do this
-				else:
-					self.database.update_player_lasso(self.player_id, lass_count - int_amount)
-					self.database.update_player_gold(self.player_id, sell_total + current_gold)
-					return 0    # tell player it done
-			if item == "pickaxe":
-				(pickaxe_count,) = self.database.select_user_pickaxe(self.player_id)[0]
-				if int_amount > pickaxe_count:
-					return 1    # tell player cannot do this
-				else:
-					self.database.update_player_pickaxe(self.player_id, pickaxe_count - int_amount)
-					self.database.update_player_gold(self.player_id, sell_total + current_gold)
-					return 0    # tell player it done
+			return self._sell_item(lower_item, int_amount)
 		except ValueError:
 			return 3
