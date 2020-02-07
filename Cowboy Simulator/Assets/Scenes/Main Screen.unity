@@ -1170,6 +1170,8 @@ MonoBehaviour:
   playerPrefab: {fileID: 4126782850054102015, guid: ce195bb1d70d84ed1ace6696c12ea1aa,
     type: 3}
   Players: []
+  time: 0
+  callInterval: 10
 --- !u!114 &1472036534
 MonoBehaviour:
   m_ObjectHideFlags: 0
