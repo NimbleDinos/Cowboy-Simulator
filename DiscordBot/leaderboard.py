@@ -1,3 +1,4 @@
+import MathsFunc
 
 class Leaderboard:
 
@@ -14,7 +15,7 @@ class Leaderboard:
 			for col in range(len(row)):
 				if col == 0:
 					continue
-				score = score + self.multipliers[col - 1] * row[col]
+				score = score + self.multipliers[col - 1] * MathsFunc.calculateLevel(row[col])
 			(player_name,) = self.database.select_player_name(row[0])[0]
 			player_scores.append((player_name, round(score*10)))
 		desc_lb = sorted(player_scores, key=lambda x: x[1], reverse=True)
