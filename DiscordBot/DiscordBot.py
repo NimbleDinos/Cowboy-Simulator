@@ -13,6 +13,7 @@ import APIMethods
 
 import db
 import random
+import leaderboard
 
 locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range",
                 "travelling"]
@@ -28,7 +29,10 @@ database_loc = r"./db/database.sql"
 database = db.database.Database(database_loc)
 database.create_player_table()
 database.create_inventory_table()
+database.create_skills_table()
 database.update_all_player_status()
+
+leaderboard = leaderboard.Leaderboard(database)
 
 
 # bot startup messages
@@ -45,6 +49,7 @@ async def on_ready():
 async def update():
 	while True:
 		print(active_player_list)
+		leaderboard.get_leaderboard()
 		for person in active_player_list:
 			(loc,) = database.select_player_place(person.player_id)[0]
 			# test = database.select_user_gold(person.player_id)
@@ -183,7 +188,7 @@ async def buy(ctx, item, amount):
 
 	for person in active_player_list:
 		if person.player_id == userID:
-			(intown,) = database.select_player_intwon(userID)[0]
+			(intown,) = database.select_player_intown(userID)[0]
 			if intown:  # if player is in a town
 				didItWork = person.buyItem(item, amount)
 				print(didItWork)
@@ -205,7 +210,7 @@ async def sell(ctx, item, amount):
 
 	for person in active_player_list:
 		if person.player_id == userID:
-			(intown,) = database.select_player_intwon(userID)[0]
+			(intown,) = database.select_player_intown(userID)[0]
 			if intown:  # if player is in a town
 				didItWork = person.sellItem(item, amount)  # this needs to be assigned to a player
 				if didItWork == 1:
@@ -245,6 +250,22 @@ async def getInven(ctx):
 		           "- Brain Cells: {9}").format(user_name, health, gold, hat, booze, gun, horse, lasso, pickaxe, value)
 		await ctx.send(message)
 
+@client.command()
+async def getSkills(ctx):
+	user_id = ctx.message.author.id
+	user_name = ctx.message.author.name
+	player_exist = database.select_player_exists(user_id)
+	if len(player_exist) == 0:
+		await ctx.send("You need to join first!")
+	else:
+		(_, hattitude, shooting, riding, catching, mining) = database.select_player_skills(user_id)[0]
+		message = ("--- Exp for: {0} ---\n"
+		           "- Hattitude: {1}\n"
+		           "- Shooting: {2}\n"
+		           "- Riding: {3}\n"
+		           "- Catching: {4}\n"
+		           "- Mining: {5}\n").format(user_name, hattitude, shooting, riding, catching, mining)
+		await ctx.send(message)
 
 @client.event
 async def on_message(message):

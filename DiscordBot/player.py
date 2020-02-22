@@ -18,11 +18,11 @@ class PlayerClass:
 		self.player_id = player_id
 
 	def update_exp(self, skill):
-		def exp_formula(x):
-			return 0.0017 * x
+		# def exp_formula(x):
+		# 	return 0.0017 * x
 
 		(curr_skill,) = self.database.select_player_skill(self.player_id, skill)[0]
-		self.database.update_player_skill(skill, exp_formula(curr_skill), self.player_id)
+		self.database.update_player_skill(skill, curr_skill + 10, self.player_id)
 
 	def panAction(self):
 		chanceToFindGold = 0.1  # Don't replace this one
@@ -32,16 +32,14 @@ class PlayerClass:
 			self.database.update_player_item("gold", curr_gold + 1, self.player_id)
 
 		# random generator to pick ability to level up
-		randomAbility = random.randint(0, 4)
+		randomAbility = random.randint(0, 3)
 		if randomAbility == 0:
 			self.update_exp('shooting')
 		if randomAbility == 1:
-			self.update_exp('hattitude')
-		if randomAbility == 2:
 			self.update_exp('riding')
-		if randomAbility == 3:
+		if randomAbility == 2:
 			self.update_exp('catching')
-		if randomAbility == 4:
+		if randomAbility == 3:
 			self.update_exp('mining')
 
 	def action(self, item_count, exp):
@@ -73,7 +71,7 @@ class PlayerClass:
 			chanceToBeShot = logisticFunc.logistic_func(shooting_exp * 0.0017)
 			randomNumber = random.uniform(0, 1)
 			if chanceToBeShot < randomNumber:
-				self.database.update_player_item("health", health - 1, self.player_id)
+				self.database.update_player_item("health", health - 4, self.player_id)
 
 	def ridingAction(self):
 		(horse_count,) = self.database.select_player_item("horse", self.player_id)[0]
