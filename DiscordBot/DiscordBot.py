@@ -44,7 +44,7 @@ async def on_ready():
 # Update loop
 async def update():
 	while True:
-		print(active_player_list)
+		# print(active_player_list)
 		for person in active_player_list:
 			(loc,) = database.select_player_place(person.player_id)[0]
 			# test = database.select_user_gold(person.player_id)
@@ -163,15 +163,23 @@ async def goto(ctx, location):
 	if loc in locationList:
 		player_status = database.select_active_players(userID)
 		if player_status[0] == (1,):
-			database.update_player_place(userID, loc)
+			database.update_player_place(userID, "travelling")
 			# TODO: do thing to get time here
 			time = 30
-			api_message = APIMethods.move_to_request(userID, loc, time)
+			api_message, status_code = APIMethods.move_to_request(userID, loc, time)
 			await ctx.send(api_message)
+			if status_code == 200:
+				await update_loc(userID, loc, time)
+				await ctx.send("{0} has arrived in {1}!".format(userName, loc))
 		else:
 			await ctx.send("You aren't in the game yet, {0}".format(userName))
 	else:
 		await ctx.send("Sorry but {0} isn't a valid place".format(location))
+
+
+async def update_loc(player_id, loc, time):
+	await asyncio.sleep(time)
+	database.update_player_place(player_id, loc)
 
 
 # buy command
@@ -193,6 +201,8 @@ async def buy(ctx, item, amount):
 					await ctx.send("Trade successful partner! {0}".format(userName))
 				else:
 					await ctx.send("That was an invalid input {0}!".format(userName))
+			else:
+				await ctx.send("You must be in a town to trade {0}!".format(userName))
 			break
 		else:
 			await ctx.send("You are not in the game! {0}".format(userName))
