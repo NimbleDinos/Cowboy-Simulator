@@ -85,6 +85,12 @@ class Database:
         rows = cur.fetchall()
         return rows
 
+    def select_player_name(self, player_id):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_player_name, (player_id,))
+        rows = cur.fetchall()
+        return rows
+
     def select_player_inventory(self, player_id):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_select_all_inventory, (player_id,))
@@ -100,6 +106,18 @@ class Database:
     def select_player_skill(self, player_id, skill):
         cur = self.conn.cursor()
         cur.execute("SELECT {0} FROM skills WHERE id={1}".format(skill, player_id))
+        rows = cur.fetchall()
+        return rows
+
+    def select_player_skills(self, player_id):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_player_skills, (player_id,))
+        rows = cur.fetchall()
+        return rows
+
+    def select_all_skills(self):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_all_skills)
         rows = cur.fetchall()
         return rows
 

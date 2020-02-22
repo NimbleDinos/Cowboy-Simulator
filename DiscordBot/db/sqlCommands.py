@@ -2,6 +2,7 @@
 
 sql_create_player_table = """CREATE TABLE IF NOT EXISTS players (
                                 id INTEGER PRIMARY KEY,
+                                playerName TEXT,
                                 status INTEGER,
                                 place TEXT,
                                 intown BOOLEAN
@@ -21,23 +22,23 @@ sql_create_inventory_table = """CREATE TABLE IF NOT EXISTS inventory (
 
 sql_create_skills_table = """CREATE TABLE IF NOT EXISTS skills (
 							id INTEGER PRIMARY KEY,
-							mining INTEGER,
+							hattitude INTEGER,
 							shooting INTEGER,
 							riding INTEGER,
 							catching INTEGER,
-							hattitude INTEGER
+							mining INTEGER
 						);"""
 
 # ---- INSERT STATEMENTS ----
 
-sql_insert_player = """INSERT INTO players(id, status, place, intown)
-                        VALUES(?, ?, ?, ?) """
+sql_insert_player = """INSERT INTO players(id, playerName, status, place, intown)
+                        VALUES(?, ?, ?, ?, ?) """
 
 sql_insert_inventory = """INSERT INTO inventory(id, health, gold, gun, booze, hat, horse, lasso, pickaxe)
                         VALUES(?, ?, ?, ?, ?, ? ,? ,?, ?) """
 
-sql_insert_skill = """INSERT INTO skills(id, mining, shooting, riding, catching, hattitude)
-						VALUES(?, ?, ?, ?, ?, ?, ?) """
+sql_insert_skill = """INSERT INTO skills(id, hattitude, shooting, riding, catching, mining)
+						VALUES(?, ?, ?, ?, ?, ?) """
 
 # ---- SELECT STATEMENTS ----
 sql_select_player_exists = """SELECT 1 
@@ -56,10 +57,22 @@ sql_select_player_intown = """SELECT intown
                             FROM players
                             WHERE id=?"""
 
+sql_select_player_name = """SELECT playerName
+							FROM players
+							WHERE id=?"""
+
 sql_select_all_inventory = """SELECT * 
                             FROM inventory
                             WHERE id=?
                             """
+
+sql_select_all_skills = """SELECT * FROM skills"""
+
+sql_select_player_skills = """SELECT * 
+							FROM skills
+							WHERE id = ?
+							"""
+
 
 # ---- UPDATE STATEMENTS ----
 

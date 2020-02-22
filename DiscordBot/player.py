@@ -1,6 +1,6 @@
 # Other File Imports
-import logisticFunc
 import random
+import MathsFunc
 
 town_price_dict = {
 	"lincoln": {
@@ -35,12 +35,9 @@ class PlayerClass:
 		self.database = database
 		self.player_id = player_id
 
-	def update_exp(self, skill):
-		def exp_formula(x):
-			return 0.0017 * x
-
+	def update_exp(self, skill, amount=10):
 		(curr_skill,) = self.database.select_player_skill(self.player_id, skill)[0]
-		self.database.update_player_skill(skill, exp_formula(curr_skill), self.player_id)
+		self.database.update_player_skill(skill, curr_skill + amount, self.player_id)
 
 	def panAction(self):
 		chanceToFindGold = 0.1  # Don't replace this one
@@ -50,22 +47,20 @@ class PlayerClass:
 			self.database.update_player_item("gold", curr_gold + 1, self.player_id)
 
 		# random generator to pick ability to level up
-		randomAbility = random.randint(0, 4)
+		randomAbility = random.randint(0, 3)
 		if randomAbility == 0:
-			self.update_exp('shooting')
+			self.update_exp('shooting', amount=2)
 		if randomAbility == 1:
-			self.update_exp('hattitude')
+			self.update_exp('riding', amount=2)
 		if randomAbility == 2:
-			self.update_exp('riding')
+			self.update_exp('catching', amount=2)
 		if randomAbility == 3:
-			self.update_exp('catching')
-		if randomAbility == 4:
-			self.update_exp('mining')
+			self.update_exp('mining', amount=2)
 
 	def action(self, item_count, exp):
 		if item_count > 0:
 			random_number = random.uniform(0, 1)
-			if exp * 0.0017 > random_number:
+			if MathsFunc.calculateLevel(exp) > random_number:
 				return 1
 			else:
 				return 0
@@ -73,7 +68,7 @@ class PlayerClass:
 	def mineAction(self):
 		(pickaxe_count,) = self.database.select_player_item("pickaxe", self.player_id)[0]
 		(mining_exp,) = self.database.select_player_skill(self.player_id, 'mining')
-		if self.action(pickaxe_count, logisticFunc.logistic_func(mining_exp * 0.0017)) == 1:
+		if self.action(pickaxe_count, MathsFunc.logistic_func(MathsFunc.calculateLevel(mining_exp))) == 1:
 			(curr_gold,) = self.database.select_player_item("gold", self.player_id)[0]
 			self.database.update_player_item("gold", curr_gold + 1, self.player_id)
 		self.database.update_player_item("pickaxe",  pickaxe_count - 1, self.player_id)
@@ -88,10 +83,10 @@ class PlayerClass:
 			self.update_exp('shooting')
 
 			(shooting_exp,) = self.database.select_player_skill(self.player_id, 'shooting')[0]
-			chanceToBeShot = logisticFunc.logistic_func(shooting_exp * 0.0017)
+			chanceToBeShot = MathsFunc.logistic_func(MathsFunc.calculateLevel(shooting_exp))
 			randomNumber = random.uniform(0, 1)
 			if chanceToBeShot < randomNumber:
-				self.database.update_player_item("health", health - 1, self.player_id)
+				self.database.update_player_item("health", health - 4, self.player_id)
 
 	def ridingAction(self):
 		(horse_count,) = self.database.select_player_item("horse", self.player_id)[0]
@@ -116,7 +111,7 @@ class PlayerClass:
 	def catchAction(self):
 		(lasso_count,) = self.database.select_player_item("lasso", self.player_id)[0]
 		(catch_exp,) = self.database.select_player_skill(self.player_id, 'catching')[0]
-		if self.action(lasso_count, logisticFunc.logistic_func(catch_exp * 0.0017)) == 1:
+		if self.action(lasso_count, MathsFunc.logistic_func(MathsFunc.calculateLevel(catch_exp))) == 1:
 			(horse_count,) = self.database.select_player_item("horse", self.player_id)[0]
 			self.database.update_player_item("horse", horse_count + 1, self.player_id)
 		self.database.update_player_item("lasso", lasso_count - 1, self.player_id)
