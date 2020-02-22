@@ -180,12 +180,12 @@ async def buy(ctx, item, amount):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
 
-
 	for person in active_player_list:
 		if person.player_id == userID:
-			(intown,) = database.select_player_intwon(userID)[0]
+			(intown,) = database.select_player_intown(userID)[0]
 			if intown:  # if player is in a town
-				didItWork = person.buyItem(item, amount)
+				(place,) = database.select_player_place(userID)[0]
+				didItWork = person.buy_item(item, amount, place)
 				print(didItWork)
 				if didItWork == 1:
 					await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
@@ -205,9 +205,10 @@ async def sell(ctx, item, amount):
 
 	for person in active_player_list:
 		if person.player_id == userID:
-			(intown,) = database.select_player_intwon(userID)[0]
+			(intown,) = database.select_player_intown(userID)[0]
 			if intown:  # if player is in a town
-				didItWork = person.sellItem(item, amount)  # this needs to be assigned to a player
+				(place,) = database.select_player_place(userID)[0]
+				didItWork = person.sell_item(item, amount, place)  # this needs to be assigned to a player
 				if didItWork == 1:
 					await ctx.send("Trade is unsuccessful partner! {0}".format(userName))
 				elif didItWork == 0:
