@@ -161,16 +161,20 @@ async def goto(ctx, location):
 	# print(player_status)
 	loc = location.lower()
 	if loc in locationList:
-		player_status = database.select_active_players(userID)
+		player_status = database.select_player_status(userID)
 		if player_status[0] == (1,):
-			database.update_player_place(userID, "travelling")
-			# TODO: do thing to get time here
-			time = 30
-			api_message, status_code = APIMethods.move_to_request(userID, loc, time)
-			await ctx.send(api_message)
-			if status_code == 200:
-				await update_loc(userID, loc, time)
-				await ctx.send("{0} has arrived in {1}!".format(userName, loc))
+			(curr_player_loc,) = database.select_player_place(userID)[0]
+			if loc == curr_player_loc:
+				await ctx.send("You are already in {0} {1}".format(loc, userName))
+			else:
+				database.update_player_place(userID, "travelling")
+				# TODO: do thing to get time here
+				time = 2
+				api_message, status_code = APIMethods.move_to_request(userID, loc, time)
+				await ctx.send(api_message)
+				if status_code == 200:
+					await update_loc(userID, loc, time)
+					await ctx.send("{0} has arrived in {1}!".format(userName, loc))
 		else:
 			await ctx.send("You aren't in the game yet, {0}".format(userName))
 	else:
