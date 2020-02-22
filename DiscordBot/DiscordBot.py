@@ -116,6 +116,8 @@ async def join(ctx):
 		database.add_player(player_data)
 		inventory_data = (userID, 100, 10, 0, 0, 0, 0, 0, 0)
 		database.add_inventory(inventory_data)
+		skill_data = (userID, 0, 0, 0, 0, 0)
+		database.add_skills(skill_data)
 
 		message = add_player()
 		await ctx.send(message)
@@ -230,7 +232,7 @@ async def getInven(ctx):
 		await ctx.send("You need to join the first!")
 	else:
 		value = random.randint(0, 1000)
-		(_, health, gold, gun, booze, hat, horse, lasso, pickaxe) = database.select_user_inventory(user_id)[0]
+		(_, health, gold, gun, booze, hat, horse, lasso, pickaxe) = database.select_player_inventory(user_id)[0]
 		message = ("--- Inventory for: {0} ---\n"
 		           "- Health: {1}\n"
 		           "- Gold: {2}\n"

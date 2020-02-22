@@ -1,6 +1,6 @@
 # ---- CREATE TABLES ----
 
-sql_create_users_table = """CREATE TABLE IF NOT EXISTS players (
+sql_create_player_table = """CREATE TABLE IF NOT EXISTS players (
                                 id INTEGER PRIMARY KEY,
                                 status INTEGER,
                                 place TEXT,
@@ -19,11 +19,25 @@ sql_create_inventory_table = """CREATE TABLE IF NOT EXISTS inventory (
                                 pickaxe INTEGER
                         );"""
 
+sql_create_skills_table = """CREATE TABLE IF NOT EXISTS skills (
+							id INTEGER PRIMARY KEY,
+							mining INTEGER,
+							shooting INTEGER,
+							riding INTEGER,
+							catching INTEGER,
+							hattitude INTEGER
+						);"""
+
+# ---- INSERT STATEMENTS ----
+
 sql_insert_player = """INSERT INTO players(id, status, place, intown)
                         VALUES(?, ?, ?, ?) """
 
 sql_insert_inventory = """INSERT INTO inventory(id, health, gold, gun, booze, hat, horse, lasso, pickaxe)
                         VALUES(?, ?, ?, ?, ?, ? ,? ,?, ?) """
+
+sql_insert_skill = """INSERT INTO skills(id, mining, shooting, riding, catching, hattitude)
+						VALUES(?, ?, ?, ?, ?, ?, ?) """
 
 # ---- SELECT STATEMENTS ----
 sql_select_player_exists = """SELECT 1 
