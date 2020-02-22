@@ -1,5 +1,8 @@
 import math
 
 def calculateLevel(playerXP):
-    playerLevel = math.sqrt((playerXP/5)-20)
+    if playerXP < 105:
+        playerLevel = 0
+    else:
+        playerLevel = math.sqrt((playerXP/5)-20)
     return playerLevel
