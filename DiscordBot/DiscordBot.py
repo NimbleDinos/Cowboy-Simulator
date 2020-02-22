@@ -117,7 +117,7 @@ async def join(ctx):
 		return api_message
 
 	if (len(player_exist)) == 0:
-		player_data = (userID, 1, "town", True)
+		player_data = (userID, userName, 1, "town", True)
 		database.add_player(player_data)
 		inventory_data = (userID, 100, 10, 0, 0, 0, 0, 0, 0)
 		database.add_inventory(inventory_data)
@@ -258,13 +258,15 @@ async def getSkills(ctx):
 	if len(player_exist) == 0:
 		await ctx.send("You need to join first!")
 	else:
+		value = random.randint(0, 100)
 		(_, hattitude, shooting, riding, catching, mining) = database.select_player_skills(user_id)[0]
 		message = ("--- Exp for: {0} ---\n"
 		           "- Hattitude: {1}\n"
 		           "- Shooting: {2}\n"
 		           "- Riding: {3}\n"
 		           "- Catching: {4}\n"
-		           "- Mining: {5}\n").format(user_name, hattitude, shooting, riding, catching, mining)
+		           "- Mining: {5}\n"
+		           "- Soberness: {6}%").format(user_name, hattitude, shooting, riding, catching, mining, value)
 		await ctx.send(message)
 
 @client.event

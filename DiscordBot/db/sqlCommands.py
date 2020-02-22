@@ -2,6 +2,7 @@
 
 sql_create_player_table = """CREATE TABLE IF NOT EXISTS players (
                                 id INTEGER PRIMARY KEY,
+                                playerName TEXT,
                                 status INTEGER,
                                 place TEXT,
                                 intown BOOLEAN
@@ -30,8 +31,8 @@ sql_create_skills_table = """CREATE TABLE IF NOT EXISTS skills (
 
 # ---- INSERT STATEMENTS ----
 
-sql_insert_player = """INSERT INTO players(id, status, place, intown)
-                        VALUES(?, ?, ?, ?) """
+sql_insert_player = """INSERT INTO players(id, playerName, status, place, intown)
+                        VALUES(?, ?, ?, ?, ?) """
 
 sql_insert_inventory = """INSERT INTO inventory(id, health, gold, gun, booze, hat, horse, lasso, pickaxe)
                         VALUES(?, ?, ?, ?, ?, ? ,? ,?, ?) """
@@ -60,6 +61,10 @@ sql_select_player_place = """SELECT place
 sql_select_player_intown = """SELECT intown
                             FROM players
                             WHERE id=?"""
+
+sql_select_player_name = """SELECT playerName
+							FROM players
+							WHERE id=?"""
 
 sql_select_all_inventory = """SELECT * 
                             FROM inventory

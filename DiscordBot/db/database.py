@@ -91,6 +91,12 @@ class Database:
         rows = cur.fetchall()
         return rows
 
+    def select_player_name(self, player_id):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_select_player_name, (player_id,))
+        rows = cur.fetchall()
+        return rows
+
     def select_player_inventory(self, player_id):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_select_all_inventory, (player_id,))
