@@ -48,11 +48,6 @@ sql_select_player_status = """SELECT status
                                 FROM players
                                 WHERE id=?"""
 
-sql_select_active_player = """SELECT 1
-                            FROM players
-                            WHERE status=1
-                            AND id=?"""
-
 sql_select_player_place = """SELECT place
                             FROM players
                             WHERE id=?"""
