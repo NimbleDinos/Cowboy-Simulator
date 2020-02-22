@@ -2,13 +2,31 @@
 import logisticFunc
 import random
 
-item_dict = {
-	"gun": 30,
-	"booze": 2,
-	"hat": 5,
-	"horse": 40,
-	"lasso": 4,
-	"pickaxe": 8
+town_price_dict = {
+	"lincoln": {
+		"gun": 50,
+		"booze": 2,
+		"hat": 50,
+		"horse": 40,
+		"lasso": 10,
+		"pickaxe": 12
+	},
+	"hull": {
+		"gun": 30,
+		"booze": 6,
+		"hat": 30,
+		"horse": 75,
+		"lasso": 7,
+		"pickaxe": 12
+	},
+	"sheffield": {
+		"gun": 50,
+		"booze": 2,
+		"hat": 20,
+		"horse": 75,
+		"lasso": 5,
+		"pickaxe": 8
+	}
 }
 
 
@@ -102,9 +120,9 @@ class PlayerClass:
 		self.database.update_player_item("lasso", lasso_count - 1, self.player_id)
 		self.update_exp('catching')
 
-	def __buy_item(self, item, int_amount):
+	def __buy_item(self, item, int_amount, price_dict):
 		(current_gold,) = self.database.select_player_item("gold", self.player_id)[0]
-		cost = item_dict.get(item) * int_amount
+		cost = price_dict.get(item) * int_amount
 		print(current_gold)
 
 		if current_gold - cost < 0:
@@ -116,21 +134,22 @@ class PlayerClass:
 			return 0
 
 	# buy item
-	def buyItem(self, item, amount):
+	def buy_item(self, item, amount, place):
 		try:
+			price_dict = town_price_dict.get(place)
 			lower_item = item.lower()
 			int_amount = int(amount)
 
-			if lower_item not in item_dict:
+			if lower_item not in price_dict:
 				return 4
 
-			return self.__buy_item(lower_item, int_amount)
+			return self.__buy_item(lower_item, int_amount, price_dict)
 		except ValueError:
 			return 3
 
-	def __sell_item(self, item, int_amount):
+	def __sell_item(self, item, int_amount, price_dict):
 		(current_gold,) = self.database.select_player_item("gold", self.player_id)[0]
-		sell_total = item_dict.get(item) * int_amount
+		sell_total = price_dict.get(item) * int_amount
 
 		(item_count,) = self.database.select_player_item(item, self.player_id)[0]
 		if item_count < int_amount:
@@ -141,14 +160,15 @@ class PlayerClass:
 			return 0
 
 	# sell item
-	def sellItem(self, item, amount):
+	def sell_item(self, item, amount, place):
 		try:
+			price_dict = town_price_dict.get(place)
 			int_amount = int(amount)
 			lower_item = item.lower()
 
-			if lower_item not in item_dict:
+			if lower_item not in price_dict:
 				return 4
 
-			return self.__sell_item(lower_item, int_amount)
+			return self.__sell_item(lower_item, int_amount, price_dict)
 		except ValueError:
 			return 3

@@ -73,12 +73,6 @@ class Database:
         rows = cur.fetchall()
         return rows
 
-    def select_active_players(self, player_id):
-        cur = self.conn.cursor()
-        cur.execute(db.sqlCommands.sql_select_active_player, (player_id,))
-        rows = cur.fetchall()
-        return rows
-
     def select_player_place(self, player_id):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_select_player_place, (player_id,))

@@ -25,8 +25,8 @@ def move_to_request(user_id, location, time):
 		response = requests.get(move_to_url)
 		print(response.status_code)
 		if response.status_code == 200:
-			return "You are moving to " + location + "!"
+			return "You are moving to " + location + "!", response.status_code
 		else:
-			return "Whoops, something went wrong"
+			return "Whoops, something went wrong", response.status_code
 	except:
-		return "Whoops, something went wrong"
+		return "Whoops, something went wrong", response.status_code
