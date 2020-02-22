@@ -27,13 +27,19 @@ class Database:
 
     def create_player_table(self):
         if self.conn is not None:
-            self.create_table(db.sqlCommands.sql_create_users_table)
+            self.create_table(db.sqlCommands.sql_create_player_table)
         else:
             print("Error: Could not establish connection to database")
 
     def create_inventory_table(self):
         if self.conn is not None:
             self.create_table(db.sqlCommands.sql_create_inventory_table)
+        else:
+            print("Error: Could not establish connection to database")
+
+    def create_skills_table(self):
+        if self.conn is not None:
+            self.create_table(db.sqlCommands.sql_create_skills_table)
         else:
             print("Error: Could not establish connection to database")
 
@@ -46,6 +52,12 @@ class Database:
     def add_inventory(self, inventory):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_insert_inventory, inventory)
+        self.conn.commit()
+        return cur.lastrowid
+
+    def add_skills(self, skills):
+        cur = self.conn.cursor()
+        cur.execute(db.sqlCommands.sql_insert_skill, skills)
         self.conn.commit()
         return cur.lastrowid
 
@@ -79,15 +91,21 @@ class Database:
         rows = cur.fetchall()
         return rows
 
-    def select_user_inventory(self, player_id):
+    def select_player_inventory(self, player_id):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_select_all_inventory, (player_id,))
         rows = cur.fetchall()
         return rows
 
-    def select_user_item(self, item, player_id):
+    def select_player_item(self, item, player_id):
         cur = self.conn.cursor()
         cur.execute("SELECT {0} FROM inventory WHERE id={1}".format(item, player_id))
+        rows = cur.fetchall()
+        return rows
+
+    def select_player_skill(self, player_id, skill):
+        cur = self.conn.cursor()
+        cur.execute("SELECT {0} FROM skills WHERE id={1}".format(skill, player_id))
         rows = cur.fetchall()
         return rows
 
@@ -111,9 +129,12 @@ class Database:
         cur.execute(db.sqlCommands.sql_update_player_intown, (in_town, player_id))
         self.conn.commit()
 
-
     def update_player_item(self, item, amount, player_id):
         cur = self.conn.cursor()
         cur.execute("UPDATE inventory SET {0} = {1} WHERE id={2}".format(item, amount, player_id))
-        rows = cur.fetchall()
-        return rows
+        self.conn.commit()
+
+    def update_player_skill(self, skill, amount, player_id):
+        cur = self.conn.cursor()
+        cur.execute("UPDATE skills SET {0} = {1} WHERE id={2}".format(skill, amount, player_id))
+        self.conn.commit()
