@@ -6,6 +6,7 @@ import discord
 import discord.ext
 from discord.ext.commands import Bot
 from discord.ext import commands
+import math
 
 # Other Files Imports
 import player
@@ -14,6 +15,7 @@ import APIMethods
 import db
 import random
 import leaderboard
+import MathsFunc
 
 locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range",
                 "travelling"]
@@ -265,6 +267,7 @@ async def getInven(ctx):
 		           "- Brain Cells: {9}").format(user_name, health, gold, hat, booze, gun, horse, lasso, pickaxe, value)
 		await ctx.send(message)
 
+
 @client.command()
 async def getSkills(ctx):
 	user_id = ctx.message.author.id
@@ -275,14 +278,20 @@ async def getSkills(ctx):
 	else:
 		value = random.randint(0, 100)
 		(_, hattitude, shooting, riding, catching, mining) = database.select_player_skills(user_id)[0]
-		message = ("--- Exp for: {0} ---\n"
+		message = ("--- Levels for: {0} ---\n"
 		           "- Hattitude: {1}\n"
 		           "- Shooting: {2}\n"
 		           "- Riding: {3}\n"
 		           "- Catching: {4}\n"
 		           "- Mining: {5}\n"
-		           "- Soberness: {6}%").format(user_name, hattitude, shooting, riding, catching, mining, value)
+		           "- Soberness: {6}%").format(user_name, math.floor(MathsFunc.calculateLevel(hattitude)),
+		                                       math.floor(MathsFunc.calculateLevel(shooting)),
+		                                       math.floor(MathsFunc.calculateLevel(riding)),
+		                                       math.floor(MathsFunc.calculateLevel(catching)),
+		                                       math.floor(MathsFunc.calculateLevel(mining)),
+		                                       value)
 		await ctx.send(message)
+
 
 @client.event
 async def on_message(message):

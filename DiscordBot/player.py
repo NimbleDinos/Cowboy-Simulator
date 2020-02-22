@@ -35,9 +35,9 @@ class PlayerClass:
 		self.database = database
 		self.player_id = player_id
 
-	def update_exp(self, skill):
+	def update_exp(self, skill, amount=10):
 		(curr_skill,) = self.database.select_player_skill(self.player_id, skill)[0]
-		self.database.update_player_skill(skill, curr_skill + 10, self.player_id)
+		self.database.update_player_skill(skill, curr_skill + amount, self.player_id)
 
 	def panAction(self):
 		chanceToFindGold = 0.1  # Don't replace this one
@@ -49,13 +49,13 @@ class PlayerClass:
 		# random generator to pick ability to level up
 		randomAbility = random.randint(0, 3)
 		if randomAbility == 0:
-			self.update_exp('shooting')
+			self.update_exp('shooting', amount=2)
 		if randomAbility == 1:
-			self.update_exp('riding')
+			self.update_exp('riding', amount=2)
 		if randomAbility == 2:
-			self.update_exp('catching')
+			self.update_exp('catching', amount=2)
 		if randomAbility == 3:
-			self.update_exp('mining')
+			self.update_exp('mining', amount=2)
 
 	def action(self, item_count, exp):
 		if item_count > 0:
