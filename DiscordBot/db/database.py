@@ -85,7 +85,7 @@ class Database:
         rows = cur.fetchall()
         return rows
 
-    def select_player_intwon(self, player_id):
+    def select_player_intown(self, player_id):
         cur = self.conn.cursor()
         cur.execute(db.sqlCommands.sql_select_player_intown, (player_id,))
         rows = cur.fetchall()
