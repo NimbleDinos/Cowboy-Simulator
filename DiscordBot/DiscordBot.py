@@ -124,7 +124,7 @@ async def join(ctx):
 		return api_message
 
 	if (len(player_exist)) == 0:
-		player_data = (userID, userName, 1, "town", True)
+		player_data = (userID, userName, 1, "lincoln", True)
 		database.add_player(player_data)
 		inventory_data = (userID, 100, 10, 0, 0, 0, 0, 0, 0)
 		database.add_inventory(inventory_data)
@@ -178,7 +178,11 @@ async def goto(ctx, location):
 			(curr_player_loc,) = database.select_player_place(userID)[0]
 			if loc == curr_player_loc:
 				await ctx.send("You are already in {0} {1}".format(loc, userName))
+			elif curr_player_loc == "travelling":
+				await ctx.send("You are already travelling somewhere {0}!".format(userName))
 			else:
+				print(curr_player_loc)
+				print(loc)
 				default_time = times_df.lookup([curr_player_loc], [loc])[0]
 				(riding_exp,) = database.select_player_skill(userID, 'riding')[0]
 				travel_time = int(round(MathsFunc.time_to(default_time, MathsFunc.calculateLevel(riding_exp))))
