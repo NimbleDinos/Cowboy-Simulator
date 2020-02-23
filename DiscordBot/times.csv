@@ -1,0 +1,9 @@
+﻿place,shooting-range,hull,sheffield,corral,mines,plains,river,lincoln
+shooting-range,0,23,98,89,120,95,55,86
+hull,23,0,79,66,99,76,38,75
+sheffield,98,79,0,15,30,78,78,112
+corral,89,66,15,0,35,64,61,95
+mines,120,99,30,35,0,70,86,110
+plains,95,76,78,64,70,0,41,40
+river,55,38,78,61,86,41,0,40
+lincoln,86,75,112,95,110,40,40,0

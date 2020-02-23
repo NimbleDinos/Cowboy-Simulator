@@ -17,6 +17,8 @@ import random
 import leaderboard
 import MathsFunc
 
+import pandas as pd
+
 locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range",
                 "travelling"]
 
@@ -35,6 +37,9 @@ database.create_skills_table()
 database.update_all_player_status()
 
 leaderboard = leaderboard.Leaderboard(database)
+
+index = ["shooting-range", "hull", "sheffield", "corral", "mines", "plains", "river", "lincoln"]
+times_df = pd.read_csv("times.csv", index_col=['place'])
 
 
 # bot startup messages
@@ -119,7 +124,7 @@ async def join(ctx):
 		return api_message
 
 	if (len(player_exist)) == 0:
-		player_data = (userID, userName, 1, "town", True)
+		player_data = (userID, userName, 1, "lincoln", True)
 		database.add_player(player_data)
 		inventory_data = (userID, 100, 10, 0, 0, 0, 0, 0, 0)
 		database.add_inventory(inventory_data)
@@ -173,14 +178,21 @@ async def goto(ctx, location):
 			(curr_player_loc,) = database.select_player_place(userID)[0]
 			if loc == curr_player_loc:
 				await ctx.send("You are already in {0} {1}".format(loc, userName))
+			elif curr_player_loc == "travelling":
+				await ctx.send("You are already travelling somewhere {0}!".format(userName))
 			else:
-				database.update_player_place(userID, "travelling")
-				# TODO: do thing to get time here
-				time = 2
-				api_message, status_code = APIMethods.move_to_request(userID, loc, time)
+				print(curr_player_loc)
+				print(loc)
+				default_time = times_df.lookup([curr_player_loc], [loc])[0]
+				(riding_exp,) = database.select_player_skill(userID, 'riding')[0]
+				travel_time = int(round(MathsFunc.time_to(default_time, MathsFunc.calculateLevel(riding_exp))))
+
+				api_message, status_code = APIMethods.move_to_request(userID, loc, travel_time)
 				await ctx.send(api_message)
 				if status_code == 200:
-					await update_loc(userID, loc, time)
+					database.update_player_place(userID, "travelling")
+					print(travel_time)
+					await update_loc(userID, loc, travel_time)
 					await ctx.send("{0} has arrived in {1}!".format(userName, loc))
 		else:
 			await ctx.send("You aren't in the game yet, {0}".format(userName))
