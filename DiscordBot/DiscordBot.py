@@ -17,6 +17,8 @@ import random
 import leaderboard
 import MathsFunc
 
+import pandas as pd
+
 locationList = ["hull", "lincoln", "sheffield", "corral", "gold-mine", "plains", "river", "shooting-range",
                 "travelling"]
 
@@ -35,6 +37,9 @@ database.create_skills_table()
 database.update_all_player_status()
 
 leaderboard = leaderboard.Leaderboard(database)
+
+index = ["shooting-range", "hull", "sheffield", "corral", "mines", "plains", "river", "lincoln"]
+times_df = pd.read_csv("times.csv", index_col=['place'])
 
 
 # bot startup messages
@@ -174,13 +179,16 @@ async def goto(ctx, location):
 			if loc == curr_player_loc:
 				await ctx.send("You are already in {0} {1}".format(loc, userName))
 			else:
-				database.update_player_place(userID, "travelling")
-				# TODO: do thing to get time here
-				time = 2
-				api_message, status_code = APIMethods.move_to_request(userID, loc, time)
+				default_time = times_df.lookup([curr_player_loc], [loc])[0]
+				(riding_exp,) = database.select_player_skill(userID, 'riding')[0]
+				travel_time = int(round(MathsFunc.time_to(default_time, MathsFunc.calculateLevel(riding_exp))))
+
+				api_message, status_code = APIMethods.move_to_request(userID, loc, travel_time)
 				await ctx.send(api_message)
 				if status_code == 200:
-					await update_loc(userID, loc, time)
+					database.update_player_place(userID, "travelling")
+					print(travel_time)
+					await update_loc(userID, loc, travel_time)
 					await ctx.send("{0} has arrived in {1}!".format(userName, loc))
 		else:
 			await ctx.send("You aren't in the game yet, {0}".format(userName))
