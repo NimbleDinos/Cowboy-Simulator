@@ -11,6 +11,7 @@ import math
 # Other Files Imports
 import player
 import APIMethods
+import roles
 
 import db
 import random
@@ -50,6 +51,7 @@ async def on_ready():
 	print("TD: {}".format(client.user.id))
 
 	client.loop.create_task(update())
+	roles.updateRole("hull",112358363668500480)
 
 
 # Update loop
@@ -91,14 +93,7 @@ async def update():
 
 			# update health
 			person.healAction()
-		print("Jobs Done")
 		await asyncio.sleep(1)
-
-
-# update users role
-async def roleUpdate():
-	pass
-
 
 # test command
 @client.command()
@@ -106,7 +101,6 @@ async def test(ctx):
 	await ctx.send("Hello, this is a test!")
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
-
 
 # join game command
 @client.command()
@@ -169,6 +163,7 @@ async def leave(ctx):
 async def goto(ctx, location):
 	userID = ctx.message.author.id
 	userName = ctx.message.author.name
+	user = ctx.message.author
 
 	# print(player_status)
 	loc = location.lower()
@@ -181,8 +176,6 @@ async def goto(ctx, location):
 			elif curr_player_loc == "travelling":
 				await ctx.send("You are already travelling somewhere {0}!".format(userName))
 			else:
-				print(curr_player_loc)
-				print(loc)
 				default_time = times_df.lookup([curr_player_loc], [loc])[0]
 				(riding_exp,) = database.select_player_skill(userID, 'riding')[0]
 				travel_time = int(round(MathsFunc.time_to(default_time, MathsFunc.calculateLevel(riding_exp))))
@@ -191,8 +184,8 @@ async def goto(ctx, location):
 				await ctx.send(api_message)
 				if status_code == 200:
 					database.update_player_place(userID, "travelling")
-					print(travel_time)
-					await update_loc(userID, loc, travel_time)
+					roles.updateRole("travelling", user)
+					await update_loc(userID, loc, travel_time, user)
 					await ctx.send("{0} has arrived in {1}!".format(userName, loc))
 		else:
 			await ctx.send("You aren't in the game yet, {0}".format(userName))
@@ -200,8 +193,9 @@ async def goto(ctx, location):
 		await ctx.send("Sorry but {0} isn't a valid place".format(location))
 
 
-async def update_loc(player_id, loc, time):
+async def update_loc(player_id, loc, time, user):
 	await asyncio.sleep(time)
+	roles.updateRole(loc, user)
 	database.update_player_place(player_id, loc)
 
 

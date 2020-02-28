@@ -28,7 +28,11 @@
     <Compile Include="ability.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MathsFunc.py" />
     <Compile Include="player.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="roles.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
