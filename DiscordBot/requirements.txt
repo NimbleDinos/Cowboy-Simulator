@@ -12,6 +12,6 @@ python-dateutil==2.8.1
 pytz==2019.3
 requests==2.22.0
 six==1.14.0
-urllib3==1.25.8
+urllib3==1.26.5
 websockets==8.1
 yarl==1.4.2
